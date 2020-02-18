@@ -24,7 +24,7 @@ After the installation in _Site administration -> Plugins -> Activity modules ->
 
 To add the module to a course a user with capability to manage elements of the course, need to go to the course page, turn editing on, click on **Add and activity or resource** in the desired section and then select **Course review** in the selection window.
 
-In addition to the default settings, you can also enable the option **Show rating widget on the course page**. In this case a widget will be displayed on the course page, allowing the user to rate the course from the course page.   If this option is enabled and the **Description** field is filled in for an element, the description text will also be displayed on the course page.  
+To display a rating widget right on the course page the option **Show rating widget on the course page** should be enabled. Widget allows users to rate the course from the course page. If this option is enabled and the **Description** field is filled in for an element, the description text will also be displayed on the course page.  
 Also, in addition to the standard options, you can configure the completion of the element depending on rating or/and review
 in the **Activity Completion** box.
 
