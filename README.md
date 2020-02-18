@@ -2,7 +2,7 @@
 
 ## About
 
-Review plugin allows students to rate the course and to write their reviews on it.
+Review plugin allows students to rate the course and to write their reviews of it.
 
 ## Features
 * user-friendly interface
