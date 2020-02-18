@@ -28,7 +28,7 @@ $string['modulenameplural'] = 'Course reviews';
 $string['already_exists'] = 'Review element already exists in course';
 $string['moderate'] = 'Moderate reviews';
 
-$string['modulename_help'] = 'Module allows to rate the course and to write review on it.';
+$string['modulename_help'] = 'Module allows to rate the course and to write review of it.';
 
 $string['review:addinstance']='Add review element to the course';
 $string['review:view']='View review element';
