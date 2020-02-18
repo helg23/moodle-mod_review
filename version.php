@@ -25,3 +25,7 @@
 $plugin->component = 'mod_review';    // plugin name
 $plugin->version   = 2019101419;        // current version
 $plugin->requires  = 2018051700;        // required Moodle version
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '2.1.0';
+
+
