@@ -28,12 +28,12 @@ $string['modulenameplural'] = 'Course reviews';
 $string['already_exists'] = 'Review element already exists in course';
 $string['moderate'] = 'Moderate reviews';
 
-$string['modulename_help'] = 'Module allows to rate the course and to give their review on it.';
+$string['modulename_help'] = 'Module allows to rate the course and to write review on it.';
 
 $string['review:addinstance']='Add review element to the course';
 $string['review:view']='View review element';
-$string['review:viewall']='View all reviews for course';
-$string['review:give']='Give review for a course';
+$string['review:viewall']='View all reviews for the course';
+$string['review:give']='Give review for the course';
 $string['review:moderate']='Moderate reviews';
 $string['review:moderateall']='Moderate all reviews';
 
