@@ -1,0 +1,309 @@
+.page_container{
+    margin-bottom: 150px;
+}
+/*------------review page------------------*/
+
+.rate_container,
+.review_container{
+    margin:40px 0 20px 0;
+}
+.section .rate_container{
+    margin:0;
+}
+
+.review_form textarea:focus {
+    border-color: var(--review-color-main);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px var(--review-color-main);
+    opacity:0.8;
+}
+.review_form div#fitem_id_submitbutton input#id_submitbutton{
+    background-color: var(--review-color-main);
+}
+
+.review_status{
+    font-size: 13px;
+    line-height: 16px;
+    padding-left: 5px;
+    position: relative;
+    top: -15px;
+}
+
+.review_status1{
+    color:#a4291d;
+}
+
+.review_status3{
+    color: var(--review-color-main);
+}
+
+.review_container input.button{
+    margin-top:20px !important;
+}
+
+.display_all_rates{
+    margin-top:20px;
+}
+.display_all_reviews{
+    width: 50%;
+    font-size: 12px;
+}
+@media (max-width: 500px) {
+    .display_all_reviews{
+        width: 90%;
+    }
+}
+.display_review {
+    margin: 30px 0 40px 0;
+}
+.review_usericon{
+    width: 30px;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 15px;
+    overflow: hidden;
+    float: left;
+}
+.review_userfio{
+    font-size: 12px;
+    color: #000;
+    font-weight: bold;
+    margin-left: 40px;
+    line-height: 30px;
+}
+.review_date{
+    color: #797979;
+    margin-bottom: 5px;
+}
+.all_rates_stat_header{
+    font-size: 18px;
+}
+
+summary{
+    font-size: 22px;
+    cursor: pointer;
+    left: -20px;
+    position: relative;
+    margin-left: 20px;
+}
+summary,
+summary:focus,
+summary:active{
+    outline:0;
+    text-decoration: none;
+}
+summary::marker {
+    color:#999999;
+}
+
+
+/*---------------stars---------------*/
+.star {
+    display:inline-block;
+    background-size: cover;
+    background-image: url(/mod/review/svg.php?pix=star_empty);
+}
+.star.star_notempty {
+    background-image: url(/mod/review/svg.php?pix=star);
+}
+.star,
+.star:hover,
+.star:focus,
+.star:active{
+    outline:0;
+    text-decoration: none;
+}
+a.star:active{
+    opacity:30%;
+}
+.your_rate_stars{
+    display:inline-block;
+    direction: rtl;
+}
+.your_rate_stars .star{
+    height:40px;
+    width:40px;
+}
+.your_rate_stars.coursepage_display .star{
+    height:30px;
+    width:30px;
+}
+.your_rate_stars:hover>a.star{
+    background-image: url(/mod/review/svg.php?pix=star_empty);
+}
+.your_rate_stars > a.star:hover,
+.your_rate_stars a.star:hover ~ a.star{
+    background-image: url(/mod/review/svg.php?pix=star) !important;
+}
+
+.review_rate .star {
+    height: 20px;
+    width: 20px;
+}
+.rate_stars_avg .star{
+    height: 32px;
+    width: 32px;
+    position:relative;
+    left:-62px;
+}
+.rate_stars_avg .star.star_notempty{
+    left:0px;
+}
+.rate_whitebg{
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    background-color: #fff;
+    position:relative;
+}
+
+/*------------all reviews and rates block------------------*/
+.review_container.review_form .col-md-3{
+    display:none;
+}
+.review_container.review_form .mform .fitem div.fitemtitle{
+    width:0px;
+}
+.review_container.review_form .mform .fitem div.felement{
+    margin-left:0px;
+    padding-left:0px;
+}
+.review_container.review_form .mform > .form-group{
+    margin-left:0px;
+}
+.review_container.review_form .mform #fitem_id_submitbutton,
+.review_filter_form .mform #fitem_id_submitbutton{
+    background-color: #fff;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+.review_filter_form{
+    margin-bottom:20px;
+}
+
+.rate_avg_text{
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+
+.rate_scale_info{
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+.rate_scale{
+    display: inline-block;
+    width: 200px;
+    border: 1px solid var(--review-color-main);
+    /*border: 1px solid #1d5cd7;*/
+    margin-left: 12px;
+    margin-right: 12px;
+}
+.all_rates_scales{
+    margin-bottom: 30px;
+    margin-top: 15px;
+}
+
+/*--------------moderate page--------------------*/
+.reviewtable {
+    width:70%;
+    font-size: 12px;
+}
+.reviewtable .cell.c0,
+.reviewtable .cell.lastcol{
+    width:15%;
+}
+.reviewtable .cell.ccourse,
+.reviewtable .cell.ccategory,
+.reviewtable .cell.c0,
+.reviewtable .cell.c1,
+.reviewtable .header.ccourse,
+.reviewtable .header.ccategory,
+.reviewtable .header.c0,
+.reviewtable .header.c1{
+    text-align:left;
+}
+.reviewtable .cell{
+    vertical-align: top;
+    text-align:center;
+}
+.reviewtable .reviewtable_date{
+    color:#797979;
+}
+.reviewtable tbody td,
+.reviewtable thead th{
+    border-bottom: 1px solid #ccc;
+    padding: 5px 10px 15px 10px;
+}
+.reviewtable thead th{
+    padding-bottom: 5px;
+}
+.reviewtable thead th.c2,
+.reviewtable thead th.c3{
+    text-align: center;
+}
+.status_container {
+    width: 100%;
+}
+/*--------------status switcher--------------------*/
+.status_switcher{
+    width: 66px;
+    border-radius: 12px;
+    padding:2px 0;
+    margin: auto;
+    position:relative;
+}
+
+.status_switcher.instatus1{
+    border: 1px solid #a4291d;
+}
+.status_switcher.instatus2{
+    border: 1px solid #ccc;
+}
+.status_switcher.instatus3{
+    border: 1px solid var(--review-color-main);
+}
+
+.status_switcher.instatus1 + .textstatus{
+    color: #a4291d;
+}
+.status_switcher.instatus2 + .textstatus{
+    color: #696969;
+}
+.status_switcher.instatus3 + .textstatus{
+    color: var(--review-color-main);
+}
+
+.status_switcher.instatus1 .status.handler{
+    background-color:#a4291d;
+    left:0px;
+}
+.status_switcher.instatus2 .status.handler{
+    background-color:#ccc;
+    left:20px;
+}
+.status_switcher.instatus3 .status.handler{
+    background-color: var(--review-color-main);
+    left:40px;
+}
+.textstatus {
+    margin: auto;
+    width: 80px;
+    text-align: center;
+}
+.status_switcher .status {
+    display: inline-block;
+    width: 20px;
+    border-radius: 10px;
+    position:relative;
+}
+.status_switcher .status.handler {
+    position:absolute;
+    margin-left:2px;
+}
+.status_switcher .status,
+.status_switcher .status:hover,
+.status_switcher .status:focus,
+.status_switcher .status:active{
+    outline:0;
+    text-decoration: none;
+}
