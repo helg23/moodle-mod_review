@@ -37,17 +37,19 @@ class mod_review_mod_form extends moodleform_mod {
      * Define form fields
      */
     function definition() {
-        global $DB;
+        global $DB,$COURSE;
 
         $mform = $this->_form; //initialize form object
 
-        $courseid=optional_param('course',0,PARAM_INT); //get course ID param
+        $courseid=$COURSE->id; //get course ID param
         $update=optional_param('update',0,PARAM_INT); //get update ID param
 
         $already_added=false;
         //check if the element is already added to the course
-        if(!$update && $cms=get_fast_modinfo($courseid)->instances['review']){
-            foreach($cms as $cm){
+		$cms_instances=get_fast_modinfo($courseid)->instances;
+        if(!$update && array_key_exists('review',$cms_instances)){
+			$review_cms=$cms_instances['review'];
+            foreach($review_cms as $cm){
                 //deletion of element could be in progress
                 if($cm->deletioninprogress!=1){$already_added=true; break;}
             }

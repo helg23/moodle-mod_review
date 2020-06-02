@@ -239,7 +239,7 @@ class user_review {
         $query='SELECT '.($count ? 'COUNT(user_review.id)' : 'user_review.*');
         if (!$count) { //if we should return data
             //add user fields in SELECT block of query
-            foreach(self::user_fields() as $ufield){$query.=',user.'.$ufield;}
+            foreach(self::user_fields() as $ufield){$query.=',usr.'.$ufield;}
             //add review fields in SELECT block of query
             foreach(self::review_fields() as $rfield){$query.=',review.'.$rfield;}
             //add coursename and id in SELECT block of query
@@ -250,7 +250,7 @@ class user_review {
         $query.=' 
         FROM {review_userreviews} user_review
         INNER JOIN {review} review ON review.id=user_review.reviewid         
-        INNER JOIN {user} user ON user.id=user_review.userid
+        INNER JOIN {user} usr ON usr.id=user_review.userid
         INNER JOIN {course} course ON course.id=review.course
         INNER JOIN {course_categories} category ON category.id=course.category';
 
@@ -346,13 +346,13 @@ class user_review {
         //complex request to calculate a share of each rate in the total number of rates
         $query='
         SELECT 
-            COUNT(id) \'amount\',
-            IFNULL(ROUND(AVG(rate),1),\'0\') \'avg\',
-            IFNULL(ROUND(SUM(IF(rate=5,1,0))/COUNT(id)*100),\'0\') \'rate5\',  
-            IFNULL(ROUND(SUM(IF(rate=4,1,0))/COUNT(id)*100),\'0\') \'rate4\',
-            IFNULL(ROUND(SUM(IF(rate=3,1,0))/COUNT(id)*100),\'0\') \'rate3\',
-            IFNULL(ROUND(SUM(IF(rate=2,1,0))/COUNT(id)*100),\'0\') \'rate2\',
-            IFNULL(ROUND(SUM(IF(rate=1,1,0))/COUNT(id)*100),\'0\') \'rate1\'
+            COUNT(id) AS "amount",
+			ROUND(AVG(rate),1) AS "avg",
+			ROUND(SUM(CASE WHEN rate=5 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate5",
+			ROUND(SUM(CASE WHEN rate=4 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate4",
+			ROUND(SUM(CASE WHEN rate=3 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate3",
+			ROUND(SUM(CASE WHEN rate=2 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate2",
+			ROUND(SUM(CASE WHEN rate=1 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate1"
         FROM {review_userreviews}
         WHERE rate!=:zero_rate AND reviewid '.$review_condition;
         $params['zero_rate']=0; //add param
