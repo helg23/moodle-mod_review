@@ -68,7 +68,7 @@ class mod_review_mod_form extends moodleform_mod {
             $mform->addElement('header', 'generalhdr', get_string('general')); //add header
             $this->standard_intro_elements(); //add intro field
             //add display on coursepage setting
-            $mform->addElement('checkbox', 'coursepage_display', get_string('coursepage_display', 'mod_review'));
+			$mform->addElement('advcheckbox', 'coursepage_display', get_string('coursepage_display', 'mod_review'), '', [], [0, 1]);
             //add help button for display on coursepage field
             $mform->addHelpButton('coursepage_display', 'coursepage_display', 'mod_review');
             //add other standard settings
