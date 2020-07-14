@@ -35,7 +35,7 @@ $string['review:view']='View review element';
 $string['review:viewall']='View all reviews for the course';
 $string['review:give']='Give review for the course';
 $string['review:moderate']='Moderate reviews';
-$string['review:moderateall']='Moderate all reviews';
+$string['review:moderate_all']='Moderate all reviews';
 
 $string['pluginadministration']='Activity setting';
 $string['color_theme']='Color of interface elements';
