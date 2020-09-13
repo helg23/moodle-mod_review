@@ -35,29 +35,48 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_review_generator extends testing_module_generator {
 
+    /**
+	 * Create review testing instance
+	 * @param object $records
+     * @param array $options
+	 * @return object
+     */
     public function create_instance($record = null, array $options = null) {
         $record = (array)$record;
-        $defaultsettings = ['copletionrate'=> 1,'completionreview'=> 1];
-        $this->apply_settings($record,$defaultsettings);
+        $defaultsettings = ['copletionrate' => 1, 'completionreview' => 1];
+        $this->apply_settings($record, $defaultsettings);
         return parent::create_instance($record, $options);
     }
 
+    /**
+	 * Create testing user review
+	 * @param object $records
+	 * @return object
+     */
     public function create_user_review($record = null) {
         global $DB;
         $record = (array)$record;
         if (!isset($record['reviewid'])) {
             throw new coding_exception('reviewid must be present in phpunit_util::create_user_review() $record');
         }
-        $defaultsettings = ['status'=> user_review::REVIEW_NOTCHECKED];
-        $this->apply_settings($record,$defaultsettings);
-        $record=(object)$record;
-        $record->id=$DB->insert_record('review_userreviews',$record);
+        $defaultsettings = ['status' => user_review::REVIEW_NOTCHECKED];
+        $this->apply_settings($record, $defaultsettings);
+        $record = (object)$record;
+        $record->id = $DB->insert_record('review_userreviews', $record);
         return $record;
     }
 
-    private function apply_settings(&$record,$settings){
+    /**
+	 * Apply testing settings
+	 * @param object $records
+     * @param array $settings
+	 * @return object
+     */
+    private function apply_settings(&$record, $settings) {
         foreach ($settings as $name => $value) {
-            if (!isset($record[$name])) {$record[$name] = $value;}
+            if (!isset($record[$name])) {
+				$record[$name] = $value;
+			}
         }
     }
 }

@@ -22,18 +22,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../config.php');  //require main config
-require_once($CFG->dirroot.'/lib/filelib.php');  //require file library
+require_once(__DIR__.'/../../config.php');  // Require main config.
+require_once($CFG->dirroot.'/lib/filelib.php');  // Require file library.
 
-$cachedir=$CFG->localcachedir.'/theme/mod/review/'; //set cache directory
-$pix=required_param('pix',PARAM_ALPHANUMEXT); //get file to render
-$filename=$pix.'.svg'; //set filename
-if (!file_exists($cachedir.'/'.$filename)) { //if file is not cached yet
-    $pix_file = $CFG->dirroot . '/mod/review/pix/' . $pix . '.svg'; //get original svg
-    if (!is_file($pix_file)) {return null;} //if no such svg in plugin - return null
-    $pix_content = file_get_contents($pix_file); //get content of origin svg file
-    $main_color = get_config('mod_review', 'colortheme'); //get color setting
-    $pix_content = str_replace("#000000", $main_color, $pix_content); //change color in svg
-    file_safe_save_content($pix_content, $cachedir . '/' . $filename); //put new svg in cache directory
+$cachedir = $CFG->localcachedir.'/theme/mod/review/'; // Set cache directory.
+$pix = required_param('pix', PARAM_ALPHANUMEXT); // Get file to render.
+$filename = $pix.'.svg'; // Set filename.
+if (!file_exists($cachedir.'/'.$filename)) { // If file is not cached yet.
+    $pixFile = $CFG->dirroot . '/mod/review/pix/' . $pix . '.svg'; // Get original svg.
+    if (!is_file($pixFile)) { // If no such svg in plugin - return null.
+		return null;
+	} 
+    $pixContent = file_get_contents($pixFile); // Get content of origin svg file.
+    $mainColor = get_config('mod_review', 'colortheme'); // Get color setting.
+    $pixContent = str_replace("#000000", $mainColor, $pixContent); // Change color in svg.
+    file_safe_save_content($pixContent, $cachedir . '/' . $filename); // Put new svg in cache directory.
 }
-send_file($cachedir.'/'.$filename, $filename); //send svg to user
+send_file($cachedir.'/'.$filename, $filename); // Send svg to user.

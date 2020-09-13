@@ -21,6 +21,7 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 $functions = [
     'mod_review_save_rate' => [

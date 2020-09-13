@@ -24,10 +24,15 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Upgrade review plugin DB structure
+ * @param int $oldversion version of plugin before upgrade
+ * @return bool result of upgrade
+ */
 function xmldb_review_upgrade($oldversion) {
     global $DB;
 
-    $result = TRUE;
+    $result = true;
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2019101402) {
@@ -35,7 +40,9 @@ function xmldb_review_upgrade($oldversion) {
         $table = new xmldb_table('review_userreviews');
         $field = new xmldb_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
         // Conditionally launch add field id.
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         // Review savepoint reached.
         upgrade_mod_savepoint(true, 2019101402, 'review');
@@ -46,11 +53,15 @@ function xmldb_review_upgrade($oldversion) {
         $table = new xmldb_table('review');
         $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'name');
         // Conditionally launch add field intro.
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         $field = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'timemodified');
         // Conditionally launch add field introformat.
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         // Review savepoint reached.
         upgrade_mod_savepoint(true, 2019101403, 'review');
@@ -61,7 +72,9 @@ function xmldb_review_upgrade($oldversion) {
         $table = new xmldb_table('review_userreviews');
         $field = new xmldb_field('reviewid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'id');
         // Conditionally launch add field reviewid.
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         // Review savepoint reached.
         upgrade_mod_savepoint(true, 2019101404, 'review');
@@ -83,7 +96,7 @@ function xmldb_review_upgrade($oldversion) {
     }
 
     if ($oldversion < 2019101416) {
-        //need to change saved statuses in DB because of changing of status constants
+        // Need to change saved statuses in DB because of changing of status constants.
         $DB->execute('
             UPDATE {review_userreviews}
             SET status=(CASE status WHEN 1 THEN 2 WHEN 2 THEN 1 WHEN 3 THEN 3 END)');
@@ -98,11 +111,15 @@ function xmldb_review_upgrade($oldversion) {
 
         // Conditionally launch add field completionrate.
         $field = new xmldb_field('completionrate', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'coursepage_display');
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         // Conditionally launch add field completionreview.
         $field = new xmldb_field('completionreview', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'completionrate');
-        if (!$dbman->field_exists($table, $field)) {$dbman->add_field($table, $field);}
+        if (!$dbman->field_exists($table, $field)) {
+			$dbman->add_field($table, $field);
+		}
 
         // Review savepoint reached.
         upgrade_mod_savepoint(true, 2019101417, 'review');

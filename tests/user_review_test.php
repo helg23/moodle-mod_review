@@ -40,7 +40,7 @@ class mod_review_user_review_testcase extends advanced_testcase {
     /**
      * Test for user_review get method
      */
-    public function test_user_review_get(){
+    public function test_user_review_get() {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -48,23 +48,23 @@ class mod_review_user_review_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course(['category'=>$category->id]);
 
         $student = self::getDataGenerator()->create_user();
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id);
 
         $record = new stdClass();
         $record->course = $course->id;
-        $review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
+        $review = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
 
         $record = new stdClass();
-        $record->reviewid=$review->id;
-        $record->userid=$student->id;
-        $user_review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_user_review($record);
+        $record->reviewid = $review->id;
+        $record->userid = $student->id;
+        $userReview = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_user_review($record);
 
-        $results=user_review::get(['id'=>$user_review->id,'course'=>$course->id,
-            'fullname'=>$course->fullname,'name'=>$category->name]);
-        $result=reset($results);
+        $results = user_review::get(['id' => $userReview->id,'course' => $course->id,
+            'fullname' => $course->fullname, 'name' => $category->name]);
+        $result = reset($results);
 
-        $this->assertEquals($user_review->id, $result->instance->id);
+        $this->assertEquals($userReview->id, $result->instance->id);
         $this->assertEquals($student->id, $result->user->id);
         $this->assertEquals($review->id, $result->review->id);
     }
@@ -72,7 +72,7 @@ class mod_review_user_review_testcase extends advanced_testcase {
     /**
      * Test for mod_review rates_stat method
      */
-    public function test_user_review_rates_stat(){
+    public function test_user_review_rates_stat() {
 
         $this->resetAfterTest(true);
 
@@ -81,16 +81,16 @@ class mod_review_user_review_testcase extends advanced_testcase {
 
         $record = new stdClass();
         $record->course = $course->id;
-        $review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
+        $review = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
 
-        $rate=mt_rand(1,5);
+        $rate = mt_rand(1, 5);
         $record = new stdClass();
-        $record->reviewid=$review->id;
-        $record->userid=$user->id;
-        $record->rate=$rate;
+        $record->reviewid = $review->id;
+        $record->userid = $user->id;
+        $record->rate = $rate;
         $this->getDataGenerator()->get_plugin_generator('mod_review')->create_user_review($record);
 
-        $result=user_review::rates_stat($review->id);
+        $result = user_review::rates_stat($review->id);
         $this->assertEquals(1, $result->amount);
         $this->assertEquals($rate, $result->avg);
         $this->assertEquals(100, $result->{'rate'.$rate});

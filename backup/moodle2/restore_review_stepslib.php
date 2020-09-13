@@ -17,11 +17,18 @@
 /**
  * Structure step to restore review activity
  *
+ * @package    mod_review
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die(); 
+ 
 class restore_review_activity_structure_step extends restore_activity_structure_step {
 
+	/**
+     * Define structure for restore
+	 * @return object restore_path_element
+     */
     protected function define_structure() {
 
         $paths = array();
@@ -32,22 +39,29 @@ class restore_review_activity_structure_step extends restore_activity_structure_
             $paths[] = new restore_path_element('review_userreviews', '/activity/review/userreviews/userreview');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Process review restore
+	 * @param $data object data of review
+     */
     protected function process_review($data) {
         global $DB;
 
         $data = (object)$data;
         $data->course = $this->get_courseid();
 
-        // insert record
+        // Insert record.
         $newitemid = $DB->insert_record('review', $data);
-        // update new activity information
+        // Update new activity information.
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Process user reviews restore
+     */
     protected function process_review_userreviews($data) {
         global $DB;
 
@@ -56,7 +70,10 @@ class restore_review_activity_structure_step extends restore_activity_structure_
 
         $DB->insert_record('review_userreviews', $data);
     }
-
+    
+	/**
+     * Other actions after restore
+     */
     protected function after_execute() {
         $this->add_related_files('mod_review', 'intro', null);
     }

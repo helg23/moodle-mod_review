@@ -28,8 +28,14 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+ 
 class backup_review_activity_structure_step extends backup_activity_structure_step {
 
+	/**
+     * Define structure for backup
+     * @return object backup_nested_element
+     */
     protected function define_structure() {
 
         // To know if we are including userinfo.
@@ -41,16 +47,16 @@ class backup_review_activity_structure_step extends backup_activity_structure_st
 
         $userreviews = new backup_nested_element('userreviews');
         $userreview = new backup_nested_element('userreview', ['id'],
-            ['userid', 'rate', 'text','timeadded','status','moderatorid','timechecked','comment']);
+            ['userid', 'rate', 'text', 'timeadded', 'status', 'moderatorid', 'timechecked', 'comment']);
 
-        // make structure
+        // Make structure.
         $review->add_child($userreviews);
         $userreviews->add_child($userreview);
 
-        // set DB tables
+        // Set DB tables.
         $review->set_source_table('review', ['id' => backup::VAR_ACTIVITYID]);
 
-        if ($userinfo) { //Without userinfo, skip user reviews
+        if ($userinfo) { // Without userinfo, skip user reviews.
             $userreview->set_source_table('review_userreviews', ['reviewid' => backup::VAR_PARENTID], 'id ASC');
         }
 

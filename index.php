@@ -22,7 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__.'/../../config.php'); //require main config
+require_once(__DIR__.'/../../config.php'); // Require main config.
 
-$id = required_param('id',PARAM_INT);   // require Course ID param
-redirect("$CFG->wwwroot/course/view.php?id=$id"); //redirect to the course page (list not needed, allowed only one instance in course)
+require_login();
+
+$id = required_param('id', PARAM_INT); // Require Course ID param.
+
+// Redirect to the course page (list not needed, allowed only one instance in course).
+redirect("$CFG->wwwroot/course/view.php?id=$id"); 

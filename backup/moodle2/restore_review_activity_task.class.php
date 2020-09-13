@@ -33,6 +33,10 @@ require_once($CFG->dirroot . '/mod/review/backup/moodle2/restore_review_stepslib
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+ 
+/**
+ * Class restore review activity task
+ */
 class restore_review_activity_task extends restore_activity_task {
 
     /**
@@ -46,7 +50,7 @@ class restore_review_activity_task extends restore_activity_task {
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps() {
-        // review has only one structure step.
+        // Review has only one structure step.
         $this->add_step(new restore_review_activity_structure_step('review_structure', 'review.xml'));
     }
 

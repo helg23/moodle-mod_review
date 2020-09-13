@@ -34,12 +34,20 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_viewed extends \core\event\course_module_viewed {
+	
+	/**
+     * Initialize event object
+     */
     protected function init() {
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'review';
     }
 
+    /**
+     * Get object mapping
+     * @return array data for mapping
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'review', 'restore' => 'review');
     }

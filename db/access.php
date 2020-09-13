@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-    //ability to add new review module
+    // Ability to add new review module.
     'mod/review:addinstance' => array(
         'riskbitmask' => RISK_XSS,
         'captype' => 'write',
@@ -36,7 +36,7 @@ $capabilities = array(
         ),
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
     ),
-    //ability to view review module
+    // Ability to view review module.
     'mod/review:view' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -48,7 +48,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-    //ability to view all user reviews in course
+    // Ability to view all user reviews in course.
     'mod/review:viewall' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -60,7 +60,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-    //ability to give review
+    // Ability to give review.
     'mod/review:give' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
@@ -71,7 +71,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-    //ability to moderate reviews
+    // Ability to moderate reviews.
     'mod/review:moderate' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -80,7 +80,7 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW
         )
     ),
-    //ability to moderate review through the whole site
+    // Ability to moderate review through the whole site.
     'mod/review:moderate_all' => [
         'riskbitmask' => RISK_CONFIG,
         'captype' => 'write',

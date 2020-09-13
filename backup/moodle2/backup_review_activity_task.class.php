@@ -21,8 +21,9 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/review/backup/moodle2/backup_review_stepslib.php'); // Because it exists (must)
+require_once($CFG->dirroot . '/mod/review/backup/moodle2/backup_review_stepslib.php'); // Because it exists (must).
 
 /**
  * Provides the steps to perform one complete backup of the review instance
@@ -35,12 +36,14 @@ class backup_review_activity_task extends backup_activity_task{
     /**
      * No specific settings for this activity
      */
-    protected function define_my_settings(){}
+    protected function define_my_settings() {
+		
+	}
 
     /**
      * Defines backup steps to store the instance data and required questions
      */
-    protected function define_my_steps(){
+    protected function define_my_steps() {
         // Generate the review.xml file containing all the review information
         $this->add_step(new backup_review_activity_structure_step('review_structure', 'review.xml'));
     }
@@ -51,7 +54,7 @@ class backup_review_activity_task extends backup_activity_task{
      * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
      * @return string the content with the URLs encoded
      */
-    static public function encode_content_links($content){
-        return $content; //no need to encode any content
+    static public function encode_content_links($content) {
+        return $content; // No need to encode any content.
     }
 }

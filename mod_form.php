@@ -21,11 +21,10 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die; // Internal script.
 
-require_once ($CFG->dirroot.'/course/moodleform_mod.php'); //require form library
-require_once($CFG->dirroot.'/mod/review/lib.php'); //require module library
-
-
+require_once($CFG->dirroot.'/course/moodleform_mod.php'); // Require form library.
+require_once($CFG->dirroot.'/mod/review/lib.php'); // Require module library.
 /**
  * Settings form for the review module.
  *
@@ -36,44 +35,46 @@ class mod_review_mod_form extends moodleform_mod {
     /**
      * Define form fields
      */
-    function definition() {
+    public function definition() {
         global $DB,$COURSE;
 
-        $mform = $this->_form; //initialize form object
+        $mform = $this->_form; // Initialize form object.
 
-        $courseid=$COURSE->id; //get course ID param
-        $update=optional_param('update',0,PARAM_INT); //get update ID param
+        $courseid = $COURSE->id; // Get course ID param.
+        $update = optional_param('update', 0, PARAM_INT); // Get update ID param.
 
-        $already_added=false;
-        //check if the element is already added to the course
-		$cms_instances=get_fast_modinfo($courseid)->instances;
-        if(!$update && array_key_exists('review',$cms_instances)){
-			$review_cms=$cms_instances['review'];
-            foreach($review_cms as $cm){
-                //deletion of element could be in progress
-                if($cm->deletioninprogress!=1){$already_added=true; break;}
+        $alreadyAdded = false;
+        // Check if the element is already added to the course.
+		$cms_instances = get_fast_modinfo($courseid)->instances;
+        if(!$update && array_key_exists('review', $cms_instances)) {
+			$review_cms = $cms_instances['review'];
+            foreach ($review_cms as $cm) {
+                // Deletion of element could be in progress.
+                if($cm->deletioninprogress != 1){
+					$alreadyAdded = true; 
+					break;
+				}
             }
         }
-
-        //if review module already added to this course
-        if ($already_added){
-            //show information to user (we can add only one element)
-            $mform->addElement('static','alreadyexists','',get_string('already_exists','mod_review'));
-            //add hidden elements to display form correctly
-            $mform->addElement('hidden','update',0);
+        // If review module already added to this course.
+        if ($alreadyAdded) {
+            // Show information to user (we can add only one element).
+            $mform->addElement('static', 'alreadyexists', '', get_string('already_exists', 'mod_review'));
+            // Add hidden elements to display form correctly.
+            $mform->addElement('hidden', 'update', 0);
             $mform->setType('update', PARAM_INT);
             $mform->addElement('hidden', 'completionunlocked', 0);
             $mform->setType('completionunlocked', PARAM_INT);
-        } else { //if no review module added to course
-            $mform->addElement('header', 'generalhdr', get_string('general')); //add header
-            $this->standard_intro_elements(); //add intro field
-            //add display on coursepage setting
+        } else { // If no review module added to course.
+            $mform->addElement('header', 'generalhdr', get_string('general')); // Add header.
+            $this->standard_intro_elements(); // Add intro field.
+            // Add display on coursepage setting.
 			$mform->addElement('advcheckbox', 'coursepage_display', get_string('coursepage_display', 'mod_review'), '', [], [0, 1]);
-            //add help button for display on coursepage field
+            // Add help button for display on coursepage field.
             $mform->addHelpButton('coursepage_display', 'coursepage_display', 'mod_review');
-            //add other standard settings
+            // Add other standard settings.
             $this->standard_coursemodule_elements();
-            //add submit and cancel buttons
+            // Add submit and cancel buttons.
             $this->add_action_buttons(true, false, null);
         }
     }
@@ -89,10 +90,14 @@ class mod_review_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'completionreview',
             get_string('completionreview', 'mod_review'), '', ['group' => 0], [0, 1]);
 
-        return array('completionrate','completionreview');
+        return array('completionrate', 'completionreview');
     }
 
-    public function completion_rule_enabled($data){
+   /**
+    * Check whether one of module's completion rules has been selected
+    * @param array $data form data
+    */
+    public function completion_rule_enabled($data) {
         return (!empty($data['completionrate']) || !empty($data['completionreview']));
     }
 }

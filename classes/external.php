@@ -21,15 +21,15 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace mod_review; //set namespace
+namespace mod_review; // Set namespace.
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir."/externallib.php"); //require external api library
-require_once($CFG->dirroot."/mod/review/lib.php"); //require review library
-require_once($CFG->dirroot.'/lib/modinfolib.php'); //require course modules library
+require_once($CFG->libdir."/externallib.php"); // Require external api library.
+require_once($CFG->dirroot."/mod/review/lib.php"); // Require review library.
+require_once($CFG->dirroot.'/lib/modinfolib.php'); // Require course modules library.
 
-//using other namespaces
+// Using other namespaces.
 use external_api;
 use external_function_parameters;
 use external_single_structure;
@@ -43,7 +43,7 @@ class external extends external_api {
      * Check parameters for save_rate method
      * @return external_function_parameters
      */
-    public static function save_rate_parameters(){
+    public static function save_rate_parameters() {
         return new external_function_parameters([
             'reviewid' => new external_value(PARAM_INT, 'Review ID', VALUE_REQUIRED),
             'rate' => new external_value(PARAM_INT, 'Rate', VALUE_REQUIRED),
@@ -52,36 +52,38 @@ class external extends external_api {
 
     /**
      * Save new rate
-     * @param $reviewid int ID of review module
-     * @param $rate int value of rate (1 to 5)
+     * @param int $reviewid
+     * @param int $rate value of rate (1 to 5)
      * @return object result
      */
-    public static function save_rate($reviewid,$rate){
-        global $DB,$USER,$PAGE;
-        //check params correctness
-        $param= self::validate_parameters(self::save_rate_parameters(),['reviewid' => $reviewid,'rate'=>$rate]);
-        $empty_answer=(object)['result'=>0,'stat'=>'','userreview_id'=>0]; //init empty answer
-        //get review element
-        if (!$review = $DB->get_record('review', ['id'=> $param['reviewid']])) {return $empty_answer;}
-        $user_review=new user_review($USER,$review); //get user_review object
-        $user_review->update(['rate'=>$rate]); //update data
-        $cm=get_coursemodule_from_instance('review',$user_review->reviewid); //course module object
-        $PAGE->set_context(\context_module::instance($cm->id)); //set context of page
-        $renderer = $PAGE->get_renderer('mod_review'); //get renderer object for a plugin
-        $stat=user_review::rates_stat($reviewid); //get rates statistics
-        //send result with rendered statistics
-        return (object)['result'=>1,'stat'=>$renderer->display_all_rates_stat($stat),'userreview_id'=>$user_review->id];
+    public static function save_rate($reviewid, $rate) {
+        global $DB, $USER, $PAGE;
+        // Check params correctness.
+        $param = self::validate_parameters(self::save_rate_parameters(), ['reviewid' => $reviewid, 'rate' => $rate]);
+        $emptyAnswer = (object)['result' => 0, 'stat' => '', 'userreview_id' => 0]; // Init empty answer.
+        // Get review element.
+        if (!$review = $DB->get_record('review', ['id' => $param['reviewid']])) {
+			return $emptyAnswer;
+		}
+        $userReview = new user_review($USER,$review); // Get user_review object.
+        $userReview->update(['rate' => $rate]); // Update data.
+        $cm = get_coursemodule_from_instance('review', $userReview->reviewid); // Course module object.
+        $PAGE->set_context(\context_module::instance($cm->id)); // Set context of page.
+        $renderer = $PAGE->get_renderer('mod_review'); // Get renderer object for a plugin.
+        $stat = user_review::rates_stat($reviewid); // Get rates statistics.
+        // Send result with rendered statistics.
+        return (object)['result' => 1, 'stat' => $renderer->display_all_rates_stat($stat), 'userreview_id' => $userReview->id];
     }
 
     /**
      * Check results of save_rate method
      * @return external_single_structure
      */
-    public static function save_rate_returns(){
+    public static function save_rate_returns() {
         return new external_single_structure([
-            'result'=>new external_value(PARAM_INT, 'Execution result'), //result of save_rate (1 - correct, others - errors)
-            'stat'=>new external_value(PARAM_RAW, 'HTML of stat widget'), //HTML of statistics block
-            'userreview_id'=>new external_value(PARAM_RAW, 'ID of user review') //ID of user review
+            'result' => new external_value(PARAM_INT, 'Execution result'), // Result of save_rate (1 - correct, others - errors).
+            'stat' => new external_value(PARAM_RAW, 'HTML of stat widget'), // HTML of statistics block.
+            'userreview_id' => new external_value(PARAM_RAW, 'ID of user review') // ID of user review.
         ]);
     }
 
@@ -90,7 +92,7 @@ class external extends external_api {
      * Check parameters for save_status method
      * @return external_function_parameters
      */
-    public static function save_status_parameters(){
+    public static function save_status_parameters() {
         return new external_function_parameters([
             'user_reviewid' => new external_value(PARAM_INT, 'Review ID', VALUE_REQUIRED),
             'status' => new external_value(PARAM_INT, 'Status', VALUE_REQUIRED),
@@ -99,40 +101,42 @@ class external extends external_api {
 
     /**
      * Save new status of review
-     * @param $reviewid int ID of review module
-     * @param $status int new status
+     * @param int $userReviewid 
+     * @param int $status new status
      * @return object result
      */
-    public static function save_status($user_reviewid,$status){
+    public static function save_status($userReviewid, $status) {
         global $PAGE;
-        //check params
-        $param= self::validate_parameters(self::save_status_parameters(),['user_reviewid' => $user_reviewid,'status'=>$status]);
-        $empty_answer=(object)['result'=>0,'switcher'=>'']; //init empty answer
-        //get user reviews
-        if(!$user_reviews=user_review::get(['id'=>$param['user_reviewid']])){return $empty_answer;}
-        $user_review=reset($user_reviews);
-        $user_review->update(['status'=>$param['status']]); //update status
+        // Check params.
+        $param = self::validate_parameters(self::save_status_parameters(), ['user_reviewid' => $userReviewid, 'status' => $status]);
+        $emptyAnswer = (object)['result' => 0, 'switcher' => '']; // Init empty answer.
+        // Get user reviews.
+        if (!$userReviews = user_review::get(['id' => $param['user_reviewid']])) {
+			return $emptyAnswer;
+		}
+        $userReview = reset($userReviews);
+        $userReview->update(['status' => $param['status']]); // Update status.
 
-        //trigger user review assessed event
-        $cm=get_coursemodule_from_instance('review',$user_review->instance->reviewid);
-        $params = ['context' => \context_module::instance($cm->id),'objectid' => $user_review->instance->id];
+        // Trigger user review assessed event.
+        $cm = get_coursemodule_from_instance('review', $userReview->instance->reviewid);
+        $params = ['context' => \context_module::instance($cm->id), 'objectid' => $userReview->instance->id];
         $event = \mod_review\event\review_assessed::create($params);
-        $event->add_record_snapshot('review_userreviews',$user_review->instance);
+        $event->add_record_snapshot('review_userreviews', $userReview->instance);
         $event->trigger();
 
-        $PAGE->set_context(\context_course::instance($user_review->review->course));
-        $renderer = $PAGE->get_renderer('mod_review'); //get renderer object for a plugin
-        return (object)['result'=>1,'switcher'=>$renderer->status_switcher($user_review)]; //send result with  status switcher HTML
+        $PAGE->set_context(\context_course::instance($userReview->review->course));
+        $renderer = $PAGE->get_renderer('mod_review'); // Get renderer object for a plugin.
+        return (object)['result' => 1,'switcher' => $renderer->status_switcher($userReview)]; // Send result with  status switcher HTML.
     }
 
     /**
      * Check result of save_status method
      * @return external_single_structure
      */
-    public static function save_status_returns(){
+    public static function save_status_returns() {
         return new external_single_structure([
-            'result'=>new external_value(PARAM_INT, 'Execution result'), //result of saving (1 - correct, others - errors)
-            'switcher'=>new external_value(PARAM_RAW, 'HTML of switcher widget') //HTML of status switcher
+            'result' => new external_value(PARAM_INT, 'Execution result'), // Result of saving (1 - correct, others - errors).
+            'switcher' => new external_value(PARAM_RAW, 'HTML of switcher widget') // HTML of status switcher.
         ]);
     }
 }

@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    // color_theme setting. Default value - moodle boost theme blue color
+    // Color_theme setting. Default value - moodle boost theme blue color.
     $setting = new admin_setting_configcolourpicker(
         'mod_review/colortheme',
         get_string('color_theme', 'mod_review'),
@@ -35,7 +35,7 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $settings->add($setting);
 
-    // number of user reviews on review page. Default value - 5
+    // Number of user reviews on review page. Default value - 5.
     $settings->add(new admin_setting_configtext(
         'mod_review/perpage_review',
         get_string('perpage_review', 'mod_review'),
@@ -43,7 +43,7 @@ if ($ADMIN->fulltree) {
         5)
     );
 
-    // number of user reviews on moderate page. Default value - 20
+    // Number of user reviews on moderate page. Default value - 20.
     $settings->add(new admin_setting_configtext('mod_review/perpage_moderate',
         get_string('perpage_moderate', 'mod_review'),
         get_string('perpage_moderate_desc', 'mod_review'),

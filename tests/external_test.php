@@ -50,31 +50,32 @@ class mod_review_external_testcase extends externallib_advanced_testcase {
 
         $student = self::getDataGenerator()->create_user();
         self::setUser($student);
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
         $this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id);
 
         $record = new stdClass();
         $record->course = $course->id;
-        $review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
+        $review = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
 
-        $rate=mt_rand(1,5);
-        $returndescription = mod_review_external::save_rate_returns();
-        $raw_result = mod_review_external::save_rate($review->id,$rate);
-        $result = external_api::clean_returnvalue($returndescription, $raw_result);
+        $rate = mt_rand(1,5);
+        $returnDescription = mod_review_external::save_rate_returns();
+        $raw_result = mod_review_external::save_rate($review->id, $rate);
+        $result = external_api::clean_returnvalue($returnDescription, $raw_result);
 
         $this->assertEquals(1, $result['result']);
         $this->assertNotEmpty($result['stat']);
         $this->assertNotEmpty($result['userreview_id']);
 
-        $user_review=$DB->get_record('review_userreviews',['id'=>$result['userreview_id']]);
-        $this->assertEquals($rate, $user_review->rate);
+        $userReview = $DB->get_record('review_userreviews', ['id' => $result['userreview_id']]);
+        $this->assertEquals($rate, $userReview->rate);
     }
 
     /**
      * Test for mod_review external save_status
+	 * @param object $userReview user review
      * @depends test_mod_review_save_rate
      */
-    public function test_mod_review_save_status($user_review){
+    public function test_mod_review_save_status($userReview){
         global $USER,$DB;
 
         $this->resetAfterTest(true);
@@ -84,23 +85,23 @@ class mod_review_external_testcase extends externallib_advanced_testcase {
 
         $record = new stdClass();
         $record->course = $course->id;
-        $review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
+        $review = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
 
         $record = new stdClass();
-        $record->reviewid=$review->id;
-        $record->userid=$USER->id;
-        $user_review=$this->getDataGenerator()->get_plugin_generator('mod_review')->create_user_review($record);
+        $record->reviewid = $review->id;
+        $record->userid = $USER->id;
+        $userReview = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_user_review($record);
 
-        $status=mt_rand(user_review::REVIEW_RETURNED,user_review::REVIEW_ACCEPTED);
+        $status = mt_rand(user_review::REVIEW_RETURNED, user_review::REVIEW_ACCEPTED);
         $returndescription = mod_review_external::save_status_returns();
-        $raw_result = mod_review_external::save_status($user_review->id,$status);
+        $raw_result = mod_review_external::save_status($userReview->id, $status);
         $result = external_api::clean_returnvalue($returndescription, $raw_result);
 
         $this->assertEquals(1, $result['result']);
         $this->assertNotEmpty($result['switcher']);
 
-        $user_review=$DB->get_record('review_userreviews',['id'=>$user_review->id]);
-        $this->assertEquals($status, $user_review->status);
+        $userReview = $DB->get_record('review_userreviews', ['id' => $userReview->id]);
+        $this->assertEquals($status, $userReview->status);
     }
 }
 

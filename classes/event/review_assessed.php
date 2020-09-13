@@ -54,6 +54,11 @@ class review_assessed extends \core\event\base {
         $this->data['objecttable'] = 'review_userreviews';
     }
 
+    /**
+     * Return object mapping
+     *
+     * @return array
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'review_userreviews', 'restore' => 'review_userreviews');
     }

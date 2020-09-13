@@ -26,8 +26,8 @@ namespace mod_review;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/lib/formslib.php'); //require form library
-require_once($CFG->dirroot.'/mod/review/lib.php'); //require module library
+require_once($CFG->dirroot.'/lib/formslib.php'); // Require form library.
+require_once($CFG->dirroot.'/mod/review/lib.php'); // Require module library.
 
 
 /**
@@ -40,27 +40,28 @@ class review_form extends \moodleform {
     /**
      * Define form fields
      */
-    function definition() {
-        $mform = $this->_form; //initialize form object		
-        $mform->addElement('html', \html_writer::tag('h4',get_string('your_review','mod_review')));
-        $mform->addElement('textarea', 'text', '',['rows'=>5,'cols'=>50]);		
+    public function definition() {
+        $mform = $this->_form; // Initialize form object.
+        $mform->addElement('html', \html_writer::tag('h4', get_string('your_review', 'mod_review')));
+        $mform->addElement('textarea', 'text', '', ['rows' => 5, 'cols' => 50]);
         $this->add_action_buttons(false, get_string('submit'));
     }
-	
-	/**
+    
+    /**
      * Apply logic based on review status
+	 * @param int $status current status of user review
      */
-	function apply_status($status){
-		$mform = $this->_form; //initialize form object
-		//for not empty reviews add note about review status		
-		if($mform->getElementValue('text')!=''){ 	
-			$mform->insertElementBefore($mform->createElement('html', 
-				\html_writer::div(get_string('status'.$status,'mod_review'),'review_status review_status'.$status)),'submitbutton');
-		}
-		//user can't change accepted review
-		if($status==user_review::REVIEW_ACCEPTED){
-			$mform->updateElementAttr('text', ['disabled'=>1]);
-			$mform->removeElement('submitbutton');
-		}	
-	}
+    public function apply_status($status){
+        $mform = $this->_form; //initialize form object
+        //for not empty reviews add note about review status
+        if ($mform->getElementValue('text') != '') {
+            $mform->insertElementBefore($mform->createElement('html',
+                \html_writer::div(get_string('status'.$status, 'mod_review'), 'review_status review_status'.$status)), 'submitbutton');
+        }
+        // User can't change accepted review.
+        if ($status == user_review::REVIEW_ACCEPTED) {
+            $mform->updateElementAttr('text', ['disabled' => 1]);
+            $mform->removeElement('submitbutton');
+        }
+    }
 }
