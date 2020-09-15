@@ -68,7 +68,7 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                                 $("#status_container" + reviewId).html(result.switcher);
                                 $('.status_switcher .status.draggable').draggable(switcherSettings);
                             }
-                        })
+                        });
                 }
             };
 
@@ -89,7 +89,7 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                             $("#status_container" + reviewId).html(result.switcher);
                             $('.status_switcher .status.draggable').draggable(switcherSettings);
                         }
-                    })
+                    });
             };
 
             /* Set event handlers*/
