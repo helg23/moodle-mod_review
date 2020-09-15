@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/mod/review/backup/moodle2/restore_review_stepslib
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 /**
  * Class restore review activity task
  */
@@ -92,9 +92,9 @@ class restore_review_activity_task extends restore_activity_task {
 
     /**
      * Define the restore log rules that will be applied
-     * by the {@link restore_logs_processor} when restoring
+     * by restore_logs_processor when restoring
      * course logs. It must return one array
-     * of {@link restore_log_rule} objects
+     * of restore_log_rule objects
      */
     static public function define_restore_log_rules_for_course() {
         $rules = array();

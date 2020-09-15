@@ -60,19 +60,19 @@ class external extends external_api {
         global $DB, $USER, $PAGE;
         // Check params correctness.
         $param = self::validate_parameters(self::save_rate_parameters(), ['reviewid' => $reviewid, 'rate' => $rate]);
-        $emptyAnswer = (object)['result' => 0, 'stat' => '', 'userreview_id' => 0]; // Init empty answer.
+        $emptyanswer = (object)['result' => 0, 'stat' => '', 'userreview_id' => 0]; // Init empty answer.
         // Get review element.
         if (!$review = $DB->get_record('review', ['id' => $param['reviewid']])) {
-			return $emptyAnswer;
-		}
-        $userReview = new user_review($USER,$review); // Get user_review object.
-        $userReview->update(['rate' => $rate]); // Update data.
-        $cm = get_coursemodule_from_instance('review', $userReview->reviewid); // Course module object.
+            return $emptyanswer;
+        }
+        $userreview = new user_review($USER, $review); // Get user_review object.
+        $userreview->update(['rate' => $rate]); // Update data.
+        $cm = get_coursemodule_from_instance('review', $userreview->reviewid); // Course module object.
         $PAGE->set_context(\context_module::instance($cm->id)); // Set context of page.
         $renderer = $PAGE->get_renderer('mod_review'); // Get renderer object for a plugin.
         $stat = user_review::rates_stat($reviewid); // Get rates statistics.
         // Send result with rendered statistics.
-        return (object)['result' => 1, 'stat' => $renderer->display_all_rates_stat($stat), 'userreview_id' => $userReview->id];
+        return (object)['result' => 1, 'stat' => $renderer->display_all_rates_stat($stat), 'userreview_id' => $userreview->id];
     }
 
     /**
@@ -101,32 +101,33 @@ class external extends external_api {
 
     /**
      * Save new status of review
-     * @param int $userReviewid 
+     * @param int $userreviewid
      * @param int $status new status
      * @return object result
      */
-    public static function save_status($userReviewid, $status) {
+    public static function save_status($userreviewid, $status) {
         global $PAGE;
         // Check params.
-        $param = self::validate_parameters(self::save_status_parameters(), ['user_reviewid' => $userReviewid, 'status' => $status]);
-        $emptyAnswer = (object)['result' => 0, 'switcher' => '']; // Init empty answer.
+        $param = self::validate_parameters(self::save_status_parameters(), ['user_reviewid' => $userreviewid, 'status' => $status]);
+        $emptyanswer = (object)['result' => 0, 'switcher' => '']; // Init empty answer.
         // Get user reviews.
-        if (!$userReviews = user_review::get(['id' => $param['user_reviewid']])) {
-			return $emptyAnswer;
-		}
-        $userReview = reset($userReviews);
-        $userReview->update(['status' => $param['status']]); // Update status.
+        if (!$userreviews = user_review::get(['id' => $param['user_reviewid']])) {
+            return $emptyanswer;
+        }
+        $userreview = reset($userreviews);
+        $userreview->update(['status' => $param['status']]); // Update status.
 
         // Trigger user review assessed event.
-        $cm = get_coursemodule_from_instance('review', $userReview->instance->reviewid);
-        $params = ['context' => \context_module::instance($cm->id), 'objectid' => $userReview->instance->id];
+        $cm = get_coursemodule_from_instance('review', $userreview->instance->reviewid);
+        $params = ['context' => \context_module::instance($cm->id), 'objectid' => $userreview->instance->id];
         $event = \mod_review\event\review_assessed::create($params);
-        $event->add_record_snapshot('review_userreviews', $userReview->instance);
+        $event->add_record_snapshot('review_userreviews', $userreview->instance);
         $event->trigger();
 
-        $PAGE->set_context(\context_course::instance($userReview->review->course));
+        $PAGE->set_context(\context_course::instance($userreview->review->course));
         $renderer = $PAGE->get_renderer('mod_review'); // Get renderer object for a plugin.
-        return (object)['result' => 1,'switcher' => $renderer->status_switcher($userReview)]; // Send result with  status switcher HTML.
+        // Send result with  status switcher HTML.
+        return (object)['result' => 1, 'switcher' => $renderer->status_switcher($userreview)]; 
     }
 
     /**

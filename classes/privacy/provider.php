@@ -42,9 +42,9 @@ class provider implements \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider,
     \core_privacy\local\request\core_userlist_provider
 {
-	/**
+    /**
      * Get metadata
-     *
+     * @param collection $collection
      * @return collection
      */
     public static function get_metadata(collection $collection) : collection {
@@ -62,14 +62,14 @@ class provider implements \core_privacy\local\metadata\provider,
     }
 
     /**
-     * Review module id
+     * @var Review module id
      */
     private static $modid;
-	
-	/**
+
+    /**
      * Get review module id
      *
-     * @return int 
+     * @return int
      */
     private static function get_modid() {
         global $DB;
@@ -88,8 +88,8 @@ class provider implements \core_privacy\local\metadata\provider,
         $contextlist = new contextlist();
         $modid = self::get_modid();
         if (!$modid) {
-			return $contextlist;
-		} // review module not installed.
+            return $contextlist;
+        } // review module not installed.
 
         $params = [
             'modid' => $modid,
@@ -119,12 +119,12 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
         if (!is_a($context, \context_module::class)) {
-			return;
-		}
+            return;
+        }
         $modid = self::get_modid();
         if (!$modid) {
-			return;
-		} // Review module not installed.
+            return;
+        } // Review module not installed.
 
         $params = [
             'modid' => $modid,
@@ -153,8 +153,8 @@ class provider implements \core_privacy\local\metadata\provider,
         global $DB;
 
         if (!$contextlist->count()) {
-			return;
-		}
+            return;
+        }
         $user = $contextlist->get_user();
 
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
@@ -163,7 +163,7 @@ class provider implements \core_privacy\local\metadata\provider,
                        rwu.userid,
                        rwu.rate,
                        rwu.text,
-                       rwu.timeadded       
+                       rwu.timeadded
                  FROM {context} c
                  JOIN {course_modules} cm ON cm.id = c.instanceid
                  JOIN {review} rw ON rw.id = cm.instance
@@ -176,24 +176,24 @@ class provider implements \core_privacy\local\metadata\provider,
         $lastcmid = null;
         $itemdata = [];
 
-        $userReviews = $DB->get_recordset_sql($sql, $params);
-        foreach ($userReviews as $userReview) {
-            if ($lastcmid !== $userReview->cmid) {
+        $userreviews = $DB->get_recordset_sql($sql, $params);
+        foreach ($userreviews as $userreview) {
+            if ($lastcmid !== $userreview->cmid) {
                 if ($itemdata) {
                     self::export_checklist_data_for_user($itemdata, $lastcmid, $user);
                 }
                 $itemdata = [];
-                $lastcmid = $userReview->cmid;
+                $lastcmid = $userreview->cmid;
             }
 
             $reviewdata[] = (object)[
-                'userid' => $userReview->userid,
-                'rate' => $userReview->rate ? $userReview->rate : '',
-                'text' => $userReview->text ? $userReview->text : '',
-                'timeadded' => $userReview->timeadded ? transform::datetime($userReview->timeadded) : '',
+                'userid' => $userreview->userid,
+                'rate' => $userreview->rate ? $userreview->rate : '',
+                'text' => $userreview->text ? $userreview->text : '',
+                'timeadded' => $userreview->timeadded ? transform::datetime($userreview->timeadded) : '',
             ];
         }
-        $userReviews->close();
+        $userreviews->close();
 
         if ($reviewdata) {
             self::export_review_data_for_user($reviewdata, $lastcmid, $user);
@@ -225,19 +225,19 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
         if (!$context) {
-			return;
-		}
+            return;
+        }
         if ($context->contextlevel != CONTEXT_MODULE) {
-			return;
-		}
+            return;
+        }
         if (!$cm = get_coursemodule_from_id('review', $context->instanceid)) {
-			return;
-		}
+            return;
+        }
 
-        $userReviewsIds = $DB->get_fieldset_select('review_userreviews', 'id', 'reviewid = ?',
+        $userreviewsids = $DB->get_fieldset_select('review_userreviews', 'id', 'reviewid = ?',
             [$cm->instance]);
-        if ($userReviewsIds) {
-            $DB->delete_records_list('review_userreviews', 'id', $userReviewsIds);
+        if ($userreviewsids) {
+            $DB->delete_records_list('review_userreviews', 'id', $userreviewsids);
         }
     }
 
@@ -249,20 +249,20 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
         if (!$contextlist->count()) {
-			return;
-		}
+            return;
+        }
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel != CONTEXT_MODULE) {
-				continue;
-			}
+                continue;
+            }
             if (!$cm = get_coursemodule_from_id('review', $context->instanceid)) {
-				continue;
-				}
-            $userReviewsIds = $DB->get_fieldset_select('review_userreviews', 'id', 'reviewid = ?',
+                continue;
+                }
+            $userreviewsids = $DB->get_fieldset_select('review_userreviews', 'id', 'reviewid = ?',
                 [$cm->instance]);
-            if ($userReviewsIds) {
-                list($isql, $params) = $DB->get_in_or_equal($userReviewsIds, SQL_PARAMS_NAMED);
+            if ($userreviewsids) {
+                list($isql, $params) = $DB->get_in_or_equal($userreviewsids, SQL_PARAMS_NAMED);
                 $params['userid'] = $userid;
                 $DB->delete_records_select('review_userreviews', "item $isql AND userid = :userid", $params);
             }
@@ -278,12 +278,12 @@ class provider implements \core_privacy\local\metadata\provider,
         global $DB;
         $context = $userlist->get_context();
         if (!is_a($context, \context_module::class)) {
-			return;
-		}
+            return;
+        }
         $modid = self::get_modid();
         if (!$modid) { // Review module not installed.
-			return;
-		} 
+            return;
+        }
 
         $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
         $review = $DB->get_record('review', ['id' => $cm->instance]);

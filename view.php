@@ -16,15 +16,10 @@
 
 /**
  * This page is the entry page into the review UI.
- * Lets students to rate a course, send their review and look through over reviews.
  *
  * @package    mod_review
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Entry page into the review UI.
  */
 require_once(__DIR__.'/../../config.php');  // Require main config.
 
@@ -40,13 +35,13 @@ if (!$review = $DB->get_record('review', ['id' => $cm->instance])) {
 } // Activity not found.
 $review->cmid = $cm->id; // Add cmid property to the activity object.
 
-//Requite authorization and course access.
+// Requite authorization and course access.
 require_course_login($course, false, $cm);
 
-//Get context of current module.
+// Get context of current module.
 $context = context_module::instance($cm->id);
 
-//Require ability to view reviews.
+// Require ability to view reviews.
 require_capability('mod/review:view', $context);
 
 // Completion and trigger events.

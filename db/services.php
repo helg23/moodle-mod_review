@@ -33,7 +33,7 @@ $functions = [
         'capabilities' => '',
         'ajax'         => true,
         'services'     => [],
-        'loginrequired'=> false
+        'loginrequired' => false
     ],
     'mod_review_save_status' => [
         'classname'    => 'mod_review\external',
@@ -44,6 +44,6 @@ $functions = [
         'capabilities' => '',
         'ajax'         => true,
         'services'     => [],
-        'loginrequired'=> false
+        'loginrequired' => false
     ]
 ];

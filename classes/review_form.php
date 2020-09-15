@@ -46,17 +46,18 @@ class review_form extends \moodleform {
         $mform->addElement('textarea', 'text', '', ['rows' => 5, 'cols' => 50]);
         $this->add_action_buttons(false, get_string('submit'));
     }
-    
+
     /**
      * Apply logic based on review status
-	 * @param int $status current status of user review
+     * @param int $status current status of user review
      */
-    public function apply_status($status){
-        $mform = $this->_form; //initialize form object
-        //for not empty reviews add note about review status
+    public function apply_status($status) {
+        $mform = $this->_form; // Initialize form object.
+        // For not empty reviews add note about review status.
         if ($mform->getElementValue('text') != '') {
             $mform->insertElementBefore($mform->createElement('html',
-                \html_writer::div(get_string('status'.$status, 'mod_review'), 'review_status review_status'.$status)), 'submitbutton');
+                \html_writer::div(get_string('status'.$status, 'mod_review'), 
+                'review_status review_status'.$status)), 'submitbutton');
         }
         // User can't change accepted review.
         if ($status == user_review::REVIEW_ACCEPTED) {

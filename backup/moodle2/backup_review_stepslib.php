@@ -29,10 +29,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
- 
+
+/**
+ * Class structure for backup
+ */
 class backup_review_activity_structure_step extends backup_activity_structure_step {
 
-	/**
+    /**
      * Define structure for backup
      * @return object backup_nested_element
      */

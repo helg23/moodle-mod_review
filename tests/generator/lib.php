@@ -36,10 +36,10 @@ defined('MOODLE_INTERNAL') || die();
 class mod_review_generator extends testing_module_generator {
 
     /**
-	 * Create review testing instance
-	 * @param object $records
+     * Create review testing instance
+     * @param object $records
      * @param array $options
-	 * @return object
+     * @return object
      */
     public function create_instance($record = null, array $options = null) {
         $record = (array)$record;
@@ -49,9 +49,9 @@ class mod_review_generator extends testing_module_generator {
     }
 
     /**
-	 * Create testing user review
-	 * @param object $records
-	 * @return object
+     * Create testing user review
+     * @param object $records
+     * @return object
      */
     public function create_user_review($record = null) {
         global $DB;
@@ -67,16 +67,15 @@ class mod_review_generator extends testing_module_generator {
     }
 
     /**
-	 * Apply testing settings
-	 * @param object $records
+     * Apply testing settings
+     * @param array $records
      * @param array $settings
-	 * @return object
      */
     private function apply_settings(&$record, $settings) {
         foreach ($settings as $name => $value) {
             if (!isset($record[$name])) {
-				$record[$name] = $value;
-			}
+                $record[$name] = $value;
+            }
         }
     }
 }

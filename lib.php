@@ -35,10 +35,14 @@ defined('MOODLE_INTERNAL') || die; // Internal script.
  */
 function review_supports($feature) {
     switch ($feature) {
-        case FEATURE_GRADE_HAS_GRADE: return false; // Grading not supported.
-        case FEATURE_BACKUP_MOODLE2: return true; // Moodle2 backup supported.
-        case FEATURE_COMPLETION_HAS_RULES: return true; // Completion with rules supported.
-        default: return null; // Any others - not supported.
+        case FEATURE_GRADE_HAS_GRADE: 
+			return false; // Grading not supported.
+        case FEATURE_BACKUP_MOODLE2: 
+			return true; // Moodle2 backup supported.
+        case FEATURE_COMPLETION_HAS_RULES: 
+			return true; // Completion with rules supported.
+        default: 
+			return null; // Any others - not supported.
     }
 }
 
@@ -57,9 +61,9 @@ function review_extend_settings_navigation($settings, $reviewnode) {
         $beforekey = $keys[$i + 1]; // Put a new node after it.
     }
     // Get course context.
-    $course_context = context_course::instance($PAGE->course->id);
+    $coursecontext = context_course::instance($PAGE->course->id);
     // If user have a capability to moderate reviews in course.
-    if (has_capability('mod/review:moderate', $course_context)) {
+    if (has_capability('mod/review:moderate', $coursecontext)) {
         // Make url to the moderate page.
         $url = new moodle_url('/mod/review/moderate.php', ['id' => $PAGE->cm->id]);
         // Make a new navigation node with that url.
@@ -78,15 +82,15 @@ function review_cm_info_view(cm_info $cm) {
     global $PAGE, $DB, $USER;
     $review = $DB->get_record('review', ['id' => $cm->instance]); // Get an activity record from DB.
     if (!$review->coursepage_display) { // If it is empty - nothing to display.
-		return;
-	} 
-    $userReview = new user_review($USER, $review); // Get user_review object.
+        return;
+    }
+    $userreview = new user_review($USER, $review); // Get user_review object.
     $renderer = $PAGE->get_renderer('mod_review'); // Get renderer for review.
-    $intro = !empty($review->intro) ? html_writer::div($review->intro) : ''; //If intro of activity is not empty - add it.
+    $intro = !empty($review->intro) ? html_writer::div($review->intro) : ''; // If intro of activity is not empty - add it.
     // Add rate form for content (let users rate course from course page).
-    $cm->set_content($intro.$renderer->user_rate_form($userReview, false, 'coursepage_display'));
+    $cm->set_content($intro.$renderer->user_rate_form($userreview, false, 'coursepage_display'));
     // Call JS-module initialize method.
-    $PAGE->requires->js_call_amd('mod_review/review', 'init'); 
+    $PAGE->requires->js_call_amd('mod_review/review', 'init');
 }
 
 /**
@@ -119,7 +123,7 @@ function review_add_instance($review) {
  */
 function review_update_instance($review) {
     global $DB;
-    $review->name = get_string('modulename','mod_review'); // Set module name.
+    $review->name = get_string('modulename', 'mod_review'); // Set module name.
     $review->timemodified = time(); // Set timemodified.
     $review->id = $review->instance; // Set id.
     $DB->update_record("review", $review); // Update record in DB.
@@ -138,16 +142,16 @@ function review_delete_instance($id) {
     global $DB;
     // Get review record.
     if (!$review = $DB->get_record("review", ["id" => $id])) {
-		return false;
-	}
+        return false;
+    }
     // Delete review record.
     if (!$DB->delete_records("review", ["id" => $review->id])) {
-		return false;
-	}
+        return false;
+    }
     // Delete user reviews of this review.
     if (!$DB->delete_records("review_userreviews", ["reviewid" => $review->id])) {
-		return false;
-	}
+        return false;
+    }
     // Return result.
     return true;
 }
@@ -157,8 +161,8 @@ function review_delete_instance($id) {
  * @return string valid html head content
  */
 function mod_review_before_standard_html_head() {
-    $mainColor = get_config('mod_review', 'colortheme');
-    $output = html_writer::tag('style', ':root {--review-color-main: '.$mainColor.';}');
+    $maincolor = get_config('mod_review', 'colortheme');
+    $output = html_writer::tag('style', ':root {--review-color-main: '.$maincolor.';}');
     return $output;
 }
 

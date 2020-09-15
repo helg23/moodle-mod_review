@@ -72,17 +72,19 @@ class user_review {
      * user_review constructor.
      * @param object $user user from DB
      * @param object $review review from DB
-     * @param object|null $userReview userReview from DB (could be null)
+     * @param object|null $userreview userreview from DB (could be null)
      */
-    public function __construct($user, $review, $userReview=null) {
-        // If empty userReview object.
-        if (!$userReview) {
+    public function __construct($user, $review, $userreview=null) {
+        // If empty userreview object.
+        if (!$userreview) {
             // Try to get it from DB.
-            $userReviews = self::get_from_db(['userid' => $user->id, 'reviewid' => $review->id]);
-            // If we can't find userReview in DB - create and empty object.
-            $userReview = (count($userReviews) > 0) ? reset($userReviews) : $this->empty_object($review->id,$user->id);
+            $userreviews = self::get_from_db(['userid' => $user->id, 'reviewid' => $review->id]);
+            // If we can't find userreview in DB - create and empty object.
+            $userreview = (count($userreviews) > 0) 
+			    ? reset($userreviews) 
+			    : $this->empty_object($review->id, $user->id);
         }
-        $this->instance = $userReview; // Set instance field.
+        $this->instance = $userreview; // Set instance field.
         $this->review = $review; // Set review field.
         $this->user = $user; // Set user field.
         // User object should contain some fields (to output user picture correctly).
@@ -91,8 +93,8 @@ class user_review {
         }
         // If we need to save rate from GET-params (when JS is turned off).
         if ($rate = optional_param('rate', 0, PARAM_INT)) {
-			$this->update(['rate' => $rate]);
-		}
+            $this->update(['rate' => $rate]);
+        }
     }
 
     /**
@@ -106,14 +108,14 @@ class user_review {
 
     /**
      * Handle form to display and save user review
-	 * @param \moodle_page @page current page
+     * @param object @page current page
      * @return string HTML of form
      */
     public function review_form(\moodle_page $page) {
         // Check ability to give reviews.
         if (!has_capability('mod/review:give', $page->context)) {
-			return;
-		}
+            return;
+        }
         $reviewform = new review_form($page->url);
         // If we get data from form.
         if ($data = $reviewform->get_data()) {
@@ -122,7 +124,7 @@ class user_review {
             $this->update((array)$data); // Save data.
 
             // Trigger user review added event.
-            $cm=get_coursemodule_from_instance('review', $this->instance->reviewid);
+            $cm = get_coursemodule_from_instance('review', $this->instance->reviewid);
             $params = ['context' => \context_module::instance($cm->id), 'objectid' => $this->instance->id];
             $event = \mod_review\event\review_added::create($params);
             $event->add_record_snapshot('review_userreviews', $this->instance);
@@ -140,46 +142,46 @@ class user_review {
      */
     public function update($newvalues) {
         global $DB;
-        $completionState = null; // Completion update state.
+        $completionstate = null; // Completion update state.
 
         // Filter parameters, skip incorrect values, format data.
         foreach ($newvalues as $field => $value) {
             // Skip incorrect fields to update.
-            if (!isset($this->instance->$field) || in_array($field, ['id', 'reviewid', 'userid'])){
-				continue;
-			}
+            if (!isset($this->instance->$field) || in_array($field, ['id', 'reviewid', 'userid'])) {
+                continue;
+            }
 
             // Skip incorrect rate format or no capability to save it.
             if ($field == 'rate') {
                 if (!in_array($value, range(1,5))) {
-					continue;
-				}
+                    continue;
+                }
                 // Get course module.
                 $cm = get_coursemodule_from_instance('review', $this->reviewid);
                 // Get module context.
                 $context = \context_module::instance($cm->id);
 
                 if (!has_capability('mod/review:give', $context)) {
-					continue;
-				}
+                    continue;
+                }
                 // Set completion status depends on rate.
                 if ($this->review->completionrate) {
-					$completionState = COMPLETION_COMPLETE;
-				}
+                    $completionstate = COMPLETION_COMPLETE;
+                }
             }
 
             // Skip incorrect status format or no capability to save it.
-            if($field == 'status') {
+            if ($field == 'status') {
                 if (!in_array($value, [self::REVIEW_RETURNED, self::REVIEW_NOTCHECKED, self::REVIEW_ACCEPTED])) {
-					continue;
-				}
+                    continue;
+                }
                 $context = \context_course::instance($this->review->course);
                 if ($value != self::REVIEW_NOTCHECKED && !has_capability('mod/review:moderate',  $context) &&
                         !has_capability('mod/review_all:moderate', \context_system::instance())) {
-							continue;
-				}
+                            continue;
+                }
                 if ($this->review->completionreview) { // Set completion status depends on status of review.
-                    $completionState = $value == self::REVIEW_ACCEPTED ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
+                    $completionstate = $value == self::REVIEW_ACCEPTED ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
                 }
             }
             $this->instance->$field = self::format_field($field, $value);
@@ -188,21 +190,21 @@ class user_review {
         // Save user review data in DB.
         if (empty($this->instance->id)) { // Insert in DB if it doesn't exist yet.
             if (!$userreviewid = $DB->insert_record('review_userreviews', $this->instance)) {
-				return false;
-			}
+                return false;
+            }
             $this->instance->id = $userreviewid;
         } else { // Update in DB.
             if (!$res = $DB->update_record('review_userreviews', $this->instance)) {
-				return false;
-			}
+                return false;
+            }
         }
 
         // Update completion state if needed.
-        if ($completionState !== null) {
+        if ($completionstate !== null) {
             list($course, $cm) = get_course_and_cm_from_instance($this->review, 'review');
             $completion = new \completion_info($course);
             if ($completion->is_enabled($cm) == COMPLETION_TRACKING_AUTOMATIC) {
-                $completion->update_state($cm, $completionState, $this->instance->userid);
+                $completion->update_state($cm, $completionstate, $this->instance->userid);
             }
         }
         return true;
@@ -213,8 +215,8 @@ class user_review {
      * @return array of fields
      */
     private static function user_fields() {
-        $userFields = explode(',', \user_picture::fields());
-        return array_diff($userFields, ['id']);
+        $userfields = explode(',', \user_picture::fields());
+        return array_diff($userfields, ['id']);
     }
 
     /**
@@ -230,16 +232,16 @@ class user_review {
      */
     public static function save_status() {
         $newstatus = optional_param('newstatus', 0, PARAM_INT);
-        $userreviewId = optional_param('userreviewid', 0, PARAM_INT);
-        if ($newstatus && $userReviews = self::get(['id' => $userreviewId])) { // Get user_review object.
-            $userReview = reset($userReviews);
-            $userReview->update(['status' => $newstatus]); // Update status.
+        $userreviewid = optional_param('userreviewid', 0, PARAM_INT);
+        if ($newstatus && $userreviews = self::get(['id' => $userreviewid])) { // Get user_review object.
+            $userreview = reset($userreviews);
+            $userreview->update(['status' => $newstatus]); // Update status.
 
             // Trigger user review assessed event.
-            $cm = get_coursemodule_from_instance('review', $userReview->instance->reviewid);
-            $params = ['context' => \context_module::instance($cm->id), 'objectid' => $userReview->instance->id];
+            $cm = get_coursemodule_from_instance('review', $userreview->instance->reviewid);
+            $params = ['context' => \context_module::instance($cm->id), 'objectid' => $userreview->instance->id];
             $event = \mod_review\event\review_assessed::create($params);
-            $event->add_record_snapshot('review_userreviews', $userReview->instance);
+            $event->add_record_snapshot('review_userreviews', $userreview->instance);
             $event->trigger();
         }
     }
@@ -261,12 +263,12 @@ class user_review {
         if (!$count) { // If we should return data.
             // Add user fields in SELECT block of query.
             foreach (self::user_fields() as $ufield) {
-				$query .= ',usr.'.$ufield;
-			}
+                $query .= ',usr.'.$ufield;
+            }
             // Add review fields in SELECT block of query.
             foreach (self::review_fields() as $rfield) {
-				$query .= ',review.'.$rfield;
-			}
+                $query .= ',review.'.$rfield;
+            }
             // Add coursename and id in SELECT block of query.
             $query .= ',course.fullname AS coursename,category.name AS categoryname,category.id AS categoryid';
         }
@@ -282,24 +284,24 @@ class user_review {
         // WHERE block of sql-query.
         $params = []; // Params of sql-query.
         // Tables and their fields that could be used as a filters.
-        $filterFields = [
+        $filterfields = [
             'user_review' => ['id', 'reviewid', 'rate', 'status', 'userid'],
             'review' => ['course'],
             'course' => ['fullname'],
             'category' => ['name']
         ];
-        $where=[];  // Conditions of sql-query.
+        $where = [];  // Conditions of sql-query.
         // Add filter conditions to WHERE.
-        foreach ($filterFields as $table => $fields) {
+        foreach ($filterfields as $table => $fields) {
             foreach ($fields as $field) {
                 if (empty($filter[$field])) { // No filter with this field.
-					continue;
-				} 
+                    continue;
+                }
                 // Format of filters in query depends on its type.
                 if (is_array($filter[$field])) {
-                    list($fieldSQL, $fieldParams) = $DB->get_in_or_equal($filter[$field], SQL_PARAMS_NAMED);
-                    $where[] = "$table.$field $fieldSQL";
-                    $params += $fieldParams;
+                    list($fieldsql, $fieldparams) = $DB->get_in_or_equal($filter[$field], SQL_PARAMS_NAMED);
+                    $where[] = "$table.$field $fieldsql";
+                    $params += $fieldparams;
                 } else if (is_numeric($filter[$field])) {
                     $where[] = "$table.$field = :$field";
                     $params[$field] = $filter[$field];
@@ -310,17 +312,17 @@ class user_review {
             }
         }
         if (!empty($where)) {
-			$query .= ' WHERE '.implode(' AND ', $where);
-		}
+            $query .= ' WHERE '.implode(' AND ', $where);
+        }
         // Add specific condition if needed only real reviews.
         if (!empty($filter['notempty_reviews'])) {
-			$query .= " AND user_review.text IS NOT NULL AND user_review.text!=''";
-		}
+            $query .= " AND user_review.text IS NOT NULL AND user_review.text!=''";
+        }
 
         // If we should return only count - make a request and return count of records.
-        if ($count){
-			return $DB->count_records_sql($query, $params);
-		}
+        if ($count) {
+            return $DB->count_records_sql($query, $params);
+        }
 
         // ORDER block of query.
         $query .= " ORDER BY user_review.timeadded DESC";
@@ -340,23 +342,23 @@ class user_review {
     public static function get($filter, $page=0, $perpage=0) {
         $result = [];
         // Get array of review data from db.
-        $user_reviews = self::get_from_db($filter, false, $page * $perpage, $perpage);
+        $userreviews = self::get_from_db($filter, false, $page * $perpage, $perpage);
         // For each data record create an object of user_review class.
-        foreach ($user_reviews as $uReview) {
-            //Create separate user object from complex record.
+        foreach ($userreviews as $ureview) {
+            // Create separate user object from complex record.
             $user = new \stdClass;
-            $user->id = $uReview->userid;
+            $user->id = $ureview->userid;
             foreach (self::user_fields() as $ufield) {
-				$user->$ufield = $uReview->$ufield;
-			}
+                $user->$ufield = $ureview->$ufield;
+            }
             // Create separate review object from complex record.
             $review = new \stdClass;
-            $review->id = $uReview->reviewid;
-            foreach (self::review_fields() as $rfield){
-				$review->$rfield = $uReview->$rfield;
-			}
+            $review->id = $ureview->reviewid;
+            foreach (self::review_fields() as $rfield) {
+                $review->$rfield = $ureview->$rfield;
+            }
             // Create object user_review from data and add it to result.
-            $result[] = new user_review($user, $review, $uReview);
+            $result[] = new user_review($user, $review, $ureview);
         }
         return $result;
     }
@@ -384,12 +386,12 @@ class user_review {
         $query = '
         SELECT
             COUNT(id) AS "amount",
-			ROUND(AVG(rate),1) AS "avg",
-			ROUND(SUM(CASE WHEN rate=5 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate5",
-			ROUND(SUM(CASE WHEN rate=4 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate4",
-			ROUND(SUM(CASE WHEN rate=3 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate3",
-			ROUND(SUM(CASE WHEN rate=2 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate2",
-			ROUND(SUM(CASE WHEN rate=1 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate1"
+            ROUND(AVG(rate),1) AS "avg",
+            ROUND(SUM(CASE WHEN rate=5 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate5",
+            ROUND(SUM(CASE WHEN rate=4 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate4",
+            ROUND(SUM(CASE WHEN rate=3 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate3",
+            ROUND(SUM(CASE WHEN rate=2 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate2",
+            ROUND(SUM(CASE WHEN rate=1 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate1"
         FROM {review_userreviews}
         WHERE rate!=:zero_rate AND reviewid '.$reviewCondition;
         $params['zero_rate'] = 0; // Add param.
@@ -400,7 +402,7 @@ class user_review {
 
     /**
      * Get empty user review object (needed when there is no user review records in DB yet)
-	 *
+     *
      * @param int $reviewid ID of review
      * @param int $userid ID of user
      * @return object empty user review object
@@ -412,15 +414,15 @@ class user_review {
 
     /**
      * Format user review fields
-	 *
+     *
      * @param string $field fieldname
      * @param mixed $value new value
      * @return string formatted value
      */
     private static function format_field($field, $value) {
         if ($field == 'text') {
-			return mb_strimwidth($value, 0, self::MAX_REVIEW_LENGTH, "...");
-		}
+            return mb_strimwidth($value, 0, self::MAX_REVIEW_LENGTH, "...");
+        }
         return $value;
     }
 }

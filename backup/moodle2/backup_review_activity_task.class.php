@@ -37,14 +37,14 @@ class backup_review_activity_task extends backup_activity_task{
      * No specific settings for this activity
      */
     protected function define_my_settings() {
-		
-	}
+
+    }
 
     /**
      * Defines backup steps to store the instance data and required questions
      */
     protected function define_my_steps() {
-        // Generate the review.xml file containing all the review information
+        // Generate the review.xml file containing all the review information.
         $this->add_step(new backup_review_activity_structure_step('review_structure', 'review.xml'));
     }
 

@@ -21,7 +21,7 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die; // Internal script.
 
 $plugin->component = 'mod_review';    // Plugin name.

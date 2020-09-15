@@ -36,28 +36,28 @@ class mod_review_mod_form extends moodleform_mod {
      * Define form fields
      */
     public function definition() {
-        global $DB,$COURSE;
+        global $DB, $COURSE;
 
         $mform = $this->_form; // Initialize form object.
 
         $courseid = $COURSE->id; // Get course ID param.
         $update = optional_param('update', 0, PARAM_INT); // Get update ID param.
 
-        $alreadyAdded = false;
+        $alreadyadded = false;
         // Check if the element is already added to the course.
-		$cms_instances = get_fast_modinfo($courseid)->instances;
-        if(!$update && array_key_exists('review', $cms_instances)) {
-			$review_cms = $cms_instances['review'];
-            foreach ($review_cms as $cm) {
+        $cmsinstances = get_fast_modinfo($courseid)->instances;
+        if (!$update && array_key_exists('review', $cmsinstances)) {
+            $reviewcms = $cmsinstances['review'];
+            foreach ($reviewcms as $cm) {
                 // Deletion of element could be in progress.
-                if($cm->deletioninprogress != 1){
-					$alreadyAdded = true; 
-					break;
-				}
+                if ($cm->deletioninprogress != 1) {
+                    $alreadyadded = true;
+                    break;
+                }
             }
         }
         // If review module already added to this course.
-        if ($alreadyAdded) {
+        if ($alreadyadded) {
             // Show information to user (we can add only one element).
             $mform->addElement('static', 'alreadyexists', '', get_string('already_exists', 'mod_review'));
             // Add hidden elements to display form correctly.
@@ -69,7 +69,7 @@ class mod_review_mod_form extends moodleform_mod {
             $mform->addElement('header', 'generalhdr', get_string('general')); // Add header.
             $this->standard_intro_elements(); // Add intro field.
             // Add display on coursepage setting.
-			$mform->addElement('advcheckbox', 'coursepage_display', get_string('coursepage_display', 'mod_review'), '', [], [0, 1]);
+            $mform->addElement('advcheckbox', 'coursepage_display', get_string('coursepage_display', 'mod_review'), '', [], [0, 1]);
             // Add help button for display on coursepage field.
             $mform->addHelpButton('coursepage_display', 'coursepage_display', 'mod_review');
             // Add other standard settings.

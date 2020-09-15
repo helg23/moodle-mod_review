@@ -27,15 +27,15 @@ require_once(__DIR__.'/../../config.php'); // Require main config.
 $id = required_param('id', PARAM_INT);    // Require Course Module ID.
 // Get cm.
 if (!$cm = get_coursemodule_from_id('review', $id)) {
-	print_error(get_string('wrong_cm', 'mod_review'));
+    print_error(get_string('wrong_cm', 'mod_review'));
 }
 // Get course.
 if (!$course = $DB->get_record('course', ['id' => $cm->course])) {
-	print_error(get_string('wrong_course', 'mod_review'));
+    print_error(get_string('wrong_course', 'mod_review'));
 }
 // Get module.
 if (!$review = $DB->get_record('review', ['id' => $cm->instance])) {
-	print_error(get_string('wrong_module', 'mod_review'));
+    print_error(get_string('wrong_module', 'mod_review'));
 }
 $review->cmid = $cm->id; // Add cmid property to the activity object.
 
@@ -49,7 +49,7 @@ if (!has_capability('mod/review:moderate', $context) &&
     throw new required_capability_exception($context, $capability, 'nopermissions', '');
 }
 
-$baseurl=new moodle_url('/mod/review/moderate.php', ['id' => $cm->id]); // Make page url.
+$baseurl = new moodle_url('/mod/review/moderate.php', ['id' => $cm->id]); // Make page url.
 $PAGE->set_url($baseurl); // Set page url.
 $PAGE->set_title($course->shortname . ': ' . format_string($review->name)); // Set page title.
 $PAGE->set_heading($course->fullname); // Set page heading.

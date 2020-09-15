@@ -1,7 +1,7 @@
 define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
     return {
         init: function() {
-            var save_rate = function(e) {
+            var saveRate = function(e) {
                 e.preventDefault();
                 var reviewid = 0;
                 var rate = 0;
@@ -40,39 +40,37 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                             $("#review_rate" + result.userreview_id + " span.star").each(function() {
                                 $(this).toggleClass('star_notempty', $(this).data('rate') <= rate);
                             });
-                            /*update the statistics block*/
+                            /* Update the statistics block*/
                             $("#rates_stat_container").html(result.stat);
                             star.css('opacity', '1').slow(3000);
                         }
                     })
                     .fail(function() {
-                        console.log('save rate error');
                         star.css('opacity', '1');
                     });
             };
 
             /* Widget to change review status*/
-            var switcher_settings = {
+            var switcherSettings = {
                 containment: "parent",
-                grid: [ 20, 50 ],
+                grid: [20, 50],
                 stop: function(event, ui) {
                     var switcher = $(event.target);
-                    var reviewId = switcher.data('reviewid'); 
+                    var reviewId = switcher.data('reviewid');
                     var newStatus = Math.round(ui.position.left / 20) + 1;
                     var requests = ajax.call([{
                         methodname: 'mod_review_save_status',
-                        args: {'user_reviewid': reviewId,'status': newStatus}
+                        args: {'user_reviewid': reviewId, 'status': newStatus}
                     }]);
                     requests[0]
                         .done(function(result) {
-                            if (result.result===1) {
+                            if (result.result === 1) {
                                 $("#status_container" + reviewId).html(result.switcher);
-                                $('.status_switcher .status.draggable').draggable(switcher_settings);
+                                $('.status_switcher .status.draggable').draggable(switcherSettings);
                             }
                         })
                         .fail(function() {
-                            console.log('save status error');
-                        });
+						});
                 }
             };
 
@@ -89,20 +87,19 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                 requests[0]
                     .done(function(result) {
                         /* Update switcher widget*/
-                        if (result.result===1) {
+                        if (result.result === 1) {
                             $("#status_container" + reviewId).html(result.switcher);
-                            $('.status_switcher .status.draggable').draggable(switcher_settings);
+                            $('.status_switcher .status.draggable').draggable(switcherSettings);
                         }
                     })
                     .fail(function() {
-                        console.log('save status error');
                     });
             };
 
             /* Set event handlers*/
-            $('.your_rate_stars .star').click(save_rate);
+            $('.your_rate_stars .star').click(saveRate);
             $(document).on('click', '.status_switcher .status', saveStatus);
-            $('.status_switcher .status.draggable').draggable(switcher_settings);
+            $('.status_switcher .status.draggable').draggable(switcherSettings);
         }
     };
 });

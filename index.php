@@ -29,4 +29,4 @@ require_login();
 $id = required_param('id', PARAM_INT); // Require Course ID param.
 
 // Redirect to the course page (list not needed, allowed only one instance in course).
-redirect("$CFG->wwwroot/course/view.php?id=$id"); 
+redirect("$CFG->wwwroot/course/view.php?id=$id");

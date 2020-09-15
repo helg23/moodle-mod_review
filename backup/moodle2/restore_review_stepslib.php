@@ -21,13 +21,16 @@
  * @copyright  2019 Oleg Kovalenko ©HSE University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die(); 
- 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Class structure for restore
+ */
 class restore_review_activity_structure_step extends restore_activity_structure_step {
 
-	/**
+    /**
      * Define structure for restore
-	 * @return object restore_path_element
+     * @return object restore_path_element
      */
     protected function define_structure() {
 
@@ -45,7 +48,7 @@ class restore_review_activity_structure_step extends restore_activity_structure_
 
     /**
      * Process review restore
-	 * @param $data object data of review
+     * @param object $data data of review
      */
     protected function process_review($data) {
         global $DB;
@@ -61,6 +64,7 @@ class restore_review_activity_structure_step extends restore_activity_structure_
 
     /**
      * Process user reviews restore
+	 * @param object $data data of user review
      */
     protected function process_review_userreviews($data) {
         global $DB;
@@ -70,8 +74,8 @@ class restore_review_activity_structure_step extends restore_activity_structure_
 
         $DB->insert_record('review_userreviews', $data);
     }
-    
-	/**
+
+    /**
      * Other actions after restore
      */
     protected function after_execute() {
