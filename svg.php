@@ -24,7 +24,7 @@
 
 require_once(__DIR__.'/../../config.php');  // Require main config.
 require_once($CFG->dirroot.'/lib/filelib.php');  // Require file library.
-require_course_login($SITE); //should be here, no login needed for this script
+require_course_login($SITE); // Should be here, no login needed for this script.
 
 $cachedir = $CFG->localcachedir.'/theme/mod/review/'; // Set cache directory.
 $pix = required_param('pix', PARAM_ALPHANUMEXT); // Get file to render.

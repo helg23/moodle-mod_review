@@ -93,10 +93,10 @@ class mod_review_mod_form extends moodleform_mod {
         return array('completionrate', 'completionreview');
     }
 
-   /**
-    * Check whether one of module's completion rules has been selected
-    * @param array $data form data
-    */
+    /**
+     * Check whether one of module's completion rules has been selected
+     * @param array $data form data
+     */
     public function completion_rule_enabled($data) {
         return (!empty($data['completionrate']) || !empty($data['completionreview']));
     }

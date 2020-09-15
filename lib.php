@@ -35,14 +35,14 @@ defined('MOODLE_INTERNAL') || die; // Internal script.
  */
 function review_supports($feature) {
     switch ($feature) {
-        case FEATURE_GRADE_HAS_GRADE: 
-			return false; // Grading not supported.
-        case FEATURE_BACKUP_MOODLE2: 
-			return true; // Moodle2 backup supported.
-        case FEATURE_COMPLETION_HAS_RULES: 
-			return true; // Completion with rules supported.
-        default: 
-			return null; // Any others - not supported.
+        case FEATURE_GRADE_HAS_GRADE:
+            return false; // Grading not supported.
+        case FEATURE_BACKUP_MOODLE2:
+            return true; // Moodle2 backup supported.
+        case FEATURE_COMPLETION_HAS_RULES:
+            return true; // Completion with rules supported.
+        default:
+            return null; // Any others - not supported.
     }
 }
 

@@ -69,8 +69,6 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                                 $('.status_switcher .status.draggable').draggable(switcherSettings);
                             }
                         })
-                        .fail(function() {
-						});
                 }
             };
 
@@ -92,8 +90,6 @@ define(['jquery', 'core/ajax', 'jqueryui'], function($, ajax) {
                             $('.status_switcher .status.draggable').draggable(switcherSettings);
                         }
                     })
-                    .fail(function() {
-                    });
             };
 
             /* Set event handlers*/

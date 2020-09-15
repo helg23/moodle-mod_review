@@ -127,7 +127,7 @@ class external extends external_api {
         $PAGE->set_context(\context_course::instance($userreview->review->course));
         $renderer = $PAGE->get_renderer('mod_review'); // Get renderer object for a plugin.
         // Send result with  status switcher HTML.
-        return (object)['result' => 1, 'switcher' => $renderer->status_switcher($userreview)]; 
+        return (object)['result' => 1, 'switcher' => $renderer->status_switcher($userreview)];
     }
 
     /**

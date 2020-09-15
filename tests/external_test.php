@@ -41,7 +41,7 @@ class mod_review_external_testcase extends externallib_advanced_testcase {
     /**
      * Test for mod_review external save_rate
      */
-    public function test_mod_review_save_rate(){
+    public function test_mod_review_save_rate() {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -57,7 +57,7 @@ class mod_review_external_testcase extends externallib_advanced_testcase {
         $record->course = $course->id;
         $review = $this->getDataGenerator()->get_plugin_generator('mod_review')->create_instance($record);
 
-        $rate = mt_rand(1,5);
+        $rate = mt_rand(1, 5);
         $returndescription = mod_review_external::save_rate_returns();
         $rawresult = mod_review_external::save_rate($review->id, $rate);
         $result = external_api::clean_returnvalue($returndescription, $rawresult);

@@ -64,7 +64,7 @@ class restore_review_activity_structure_step extends restore_activity_structure_
 
     /**
      * Process user reviews restore
-	 * @param object $data data of user review
+     * @param object $data data of user review
      */
     protected function process_review_userreviews($data) {
         global $DB;

@@ -80,9 +80,9 @@ class user_review {
             // Try to get it from DB.
             $userreviews = self::get_from_db(['userid' => $user->id, 'reviewid' => $review->id]);
             // If we can't find userreview in DB - create and empty object.
-            $userreview = (count($userreviews) > 0) 
-			    ? reset($userreviews) 
-			    : $this->empty_object($review->id, $user->id);
+            $userreview = (count($userreviews) > 0)
+                ? reset($userreviews)
+                : $this->empty_object($review->id, $user->id);
         }
         $this->instance = $userreview; // Set instance field.
         $this->review = $review; // Set review field.
@@ -108,8 +108,8 @@ class user_review {
 
     /**
      * Handle form to display and save user review
-     * @param object @page current page
-     * @return string HTML of form
+     * @param \moodle_page @page current page
+     * @return mixed HTML of form or null
      */
     public function review_form(\moodle_page $page) {
         // Check ability to give reviews.
@@ -153,7 +153,7 @@ class user_review {
 
             // Skip incorrect rate format or no capability to save it.
             if ($field == 'rate') {
-                if (!in_array($value, range(1,5))) {
+                if (!in_array($value, range(1, 5))) {
                     continue;
                 }
                 // Get course module.
@@ -255,7 +255,7 @@ class user_review {
      * @param int $limitnum number of records to take
      * @return mixed count or null or complex object from db
      */
-    private static function get_from_db($filter=null, $count=false, $limitfrom=0, $limitnum=0){
+    private static function get_from_db($filter=null, $count=false, $limitfrom=0, $limitnum=0) {
         global $DB;
 
         // SELECT block of sql-query.
@@ -381,7 +381,7 @@ class user_review {
     public static function rates_stat($reviewid) {
         global $DB;
         // Get review conditions.
-        list($reviewCondition, $params) = $DB->get_in_or_equal($reviewid, SQL_PARAMS_NAMED, 'param', true, 0);
+        list($reviewсondition, $params) = $DB->get_in_or_equal($reviewid, SQL_PARAMS_NAMED, 'param', true, 0);
         // Complex request to calculate a share of each rate in the total number of rates.
         $query = '
         SELECT
@@ -393,7 +393,7 @@ class user_review {
             ROUND(SUM(CASE WHEN rate=2 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate2",
             ROUND(SUM(CASE WHEN rate=1 THEN 1 ELSE 0 END)/COUNT(id)*100) AS "rate1"
         FROM {review_userreviews}
-        WHERE rate!=:zero_rate AND reviewid '.$reviewCondition;
+        WHERE rate!=:zero_rate AND reviewid '.$reviewсondition;
         $params['zero_rate'] = 0; // Add param.
         // Get the request result.
         $stat = $DB->get_record_sql($query, $params);

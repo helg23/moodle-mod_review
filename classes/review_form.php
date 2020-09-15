@@ -56,7 +56,7 @@ class review_form extends \moodleform {
         // For not empty reviews add note about review status.
         if ($mform->getElementValue('text') != '') {
             $mform->insertElementBefore($mform->createElement('html',
-                \html_writer::div(get_string('status'.$status, 'mod_review'), 
+                \html_writer::div(get_string('status'.$status, 'mod_review'),
                 'review_status review_status'.$status)), 'submitbutton');
         }
         // User can't change accepted review.

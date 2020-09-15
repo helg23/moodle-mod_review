@@ -60,9 +60,9 @@ class mod_review_renderer extends plugin_renderer_base {
 
     /**
      * Display form to make rate
-     * @param object $userreview user review
+     * @param user_review $userreview user review
      * @param bool $header form header
-     * @param string $auxClass auxiliary css class
+     * @param string $auxclass auxiliary css class
      * @return string HTML of rate form
      */
     public function user_rate_form(user_review $userreview, $header = true, $auxclass = '') {
@@ -73,10 +73,10 @@ class mod_review_renderer extends plugin_renderer_base {
         $ratestars = '';
         for ($i = 5; $i >= 1; $i--) {
             // Display empty/not empty star in accordance with current user rate.
-            $auxStarClass = $userreview->rate >= $i ? ' star_notempty' : '';
+            $auxstarclass = $userreview->rate >= $i ? ' star_notempty' : '';
             $url = new moodle_url($this->page->url, ['rate' => $i]); // Url to save rate - when JS is turned off.
             $ratestars .= html_writer::link($url, '&nbsp;',
-                ['class' => 'yfdr_'.$userreview->reviewid.'_'.$i.' star'.$auxStarClass]);
+                ['class' => 'yfdr_'.$userreview->reviewid.'_'.$i.' star'.$auxstarclass]);
         }
         $cssclass = 'your_rate_stars'.($auxclass ? ' '.$auxclass : ''); // Get css class.
         // Add form.
@@ -86,7 +86,7 @@ class mod_review_renderer extends plugin_renderer_base {
 
     /**
      * Display form to send review
-     * @param object $userreview user review
+     * @param user_review $userreview user review
      * @return string HTML if form
      */
     public function user_review_form(user_review $userreview) {
@@ -151,8 +151,8 @@ class mod_review_renderer extends plugin_renderer_base {
         $gradientcolor = '';
         for ($i = 1; $i <= 5; $i++) {
             $offset = $stat->{'rate'.$i} * 2; // Calculate an offset.
-			// Color for CSS.
-            $gradientcolor = $maincolor.' 0px,'.$maincolor.' '.$offset.'px,#fff '.$offset.'px,#FFF 100%'; 
+            // Color for CSS.
+            $gradientcolor = $maincolor.' 0px,'.$maincolor.' '.$offset.'px,#fff '.$offset.'px,#FFF 100%';
             // Display a rectangle with gradient in proportion to the share of rate in the total number of rates.
             $html .= html_writer::div(
                 $i.
@@ -170,8 +170,8 @@ class mod_review_renderer extends plugin_renderer_base {
      */
     public function display_all_user_reviews($review) {
         $stat = user_review::rates_stat($review->id); // Get statistics.
-        $html = html_writer::div($this->display_all_rates_stat($stat), 
-			'', ['id' => 'rates_stat_container']); // Add statistics to html.
+        $html = html_writer::div($this->display_all_rates_stat($stat),
+            '', ['id' => 'rates_stat_container']); // Add statistics to html.
         $filter = ['reviewid' => $review->id, 'status' => [user_review::REVIEW_ACCEPTED]]; // Set filter to get user reviews.
         $page = optional_param('page', 0, PARAM_INT); // Page param for paging.
         $countentries = user_review::count($filter); // Count all reviews.
@@ -188,7 +188,7 @@ class mod_review_renderer extends plugin_renderer_base {
         $html .= $this->paging_bar($countentries, $page, $perpage, $url); // Add paging bar.
 
         // If user send page (use paging navigation) - show him all reviews block.
-        $options = isset($_GET['page']) ? ['open' => 'open'] : []; 
+        $options = isset($_GET['page']) ? ['open' => 'open'] : [];
         // Display all reviews block as a detail tag (browser would allow to show/hide it automatically).
         $summary = html_writer::tag('summary', get_string('all_reviews', 'mod_review'), ['id' => 'allreviews']);
         $details = html_writer::tag('details', $summary.$html, $options);
@@ -197,7 +197,7 @@ class mod_review_renderer extends plugin_renderer_base {
 
     /**
      * Display one user review
-     * @param object $userreview user review
+     * @param user_review $userreview user review
      * @return string HTML of user review
      */
     public function display_review(user_review $userreview) {
@@ -230,7 +230,7 @@ class mod_review_renderer extends plugin_renderer_base {
      * Render moderation page
      * @param object|null $review reviewe
      * @param array $auxfilter auxiliary filter
-	 * @param int $perpage reviews per page
+     * @param int $perpage reviews per page
      * @return string HTML of moderation page
      */
     public function moderate_page($review = null, $auxfilter = null, $perpage = 0) {
@@ -280,8 +280,8 @@ class mod_review_renderer extends plugin_renderer_base {
                 $row->cells = ($review)
                     ? []
                     : ['category' => html_writer::link(
-							new moodle_url('/course/management.php', 
-							['categoryid' => $userreview->categoryid]),
+                            new moodle_url('/course/management.php',
+                            ['categoryid' => $userreview->categoryid]),
                         $userreview->categoryname, ['target' => '_blank']),
                         'course' => html_writer::link(new moodle_url('/course/view.php', ['id' => $userreview->review->course]),
                         $userreview->coursename, ['target' => '_blank'])
@@ -305,7 +305,7 @@ class mod_review_renderer extends plugin_renderer_base {
 
     /**
      * Display status switcher for moderation
-     * @param object $userreview user review
+     * @param user_review $userreview user review
      * @return string HTML of widget
      */
     public function status_switcher(user_review $userreview) {
@@ -324,9 +324,9 @@ class mod_review_renderer extends plugin_renderer_base {
         }
         // Add the handler of switcher - to catch drag events.
         $html .= html_writer::link('#', '&nbsp;',
-            ['class' => 'status handler selected draggable', 
-			'data-status' => $userreview->status, 
-			'data-reviewid' => $userreview->id]);
+            ['class' => 'status handler selected draggable',
+            'data-status' => $userreview->status,
+            'data-reviewid' => $userreview->id]);
         return html_writer::div($html, 'status_switcher instatus'.$userreview->status).
             html_writer::div(get_string('status'.$userreview->status.'_short', 'mod_review'), 'textstatus');
     }

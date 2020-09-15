@@ -258,7 +258,7 @@ class provider implements \core_privacy\local\metadata\provider,
             }
             if (!$cm = get_coursemodule_from_id('review', $context->instanceid)) {
                 continue;
-                }
+            }
             $userreviewsids = $DB->get_fieldset_select('review_userreviews', 'id', 'reviewid = ?',
                 [$cm->instance]);
             if ($userreviewsids) {
